@@ -1,0 +1,5 @@
+*.DS_Store
+Manifest.toml
+# Never include output folders
+**/results*/
+**/TDR_results/
