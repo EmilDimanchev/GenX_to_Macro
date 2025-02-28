@@ -30,7 +30,7 @@ function make_macro_dir(macro_case::AbstractString)
             JSON3.pretty(io, system_data)
         end
 
-        open(joinpath(macro_case_path,"settings/macro_settings.json"), "w") do io
+        open(joinpath(macro_case,"settings/macro_settings.json"), "w") do io
             JSON3.pretty(io, Dict("ConstraintScaling"=>false))
         end
     end

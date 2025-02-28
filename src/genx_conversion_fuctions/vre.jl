@@ -51,7 +51,7 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString)
             Dict(
                 "id" =>  gen(y).resource,
                 "edges" => Dict(
-                    "elec_edge" => Dict(
+                    "edge" => Dict(
                         "end_vertex" => "elec_" * gen(y).region,
                         "type" => "Electricity",
                         "constraints" => constraints_dict,

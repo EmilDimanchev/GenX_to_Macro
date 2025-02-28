@@ -45,7 +45,7 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
         )
         push!(nodes["nodes"][2]["instance_data"], node_instance)
     end
-    fuel_prices = DataFrame([inputs["fuel_costs"][f] for f in fuel_names], fuel_names);
+    fuel_prices = DataFrame([inputs["fuel_costs"][f]/conv_mmbtu_to_mwh for f in fuel_names], fuel_names);
     CSV.write(joinpath(macro_case,"System/fuel_prices.csv"), fuel_prices)
 
     push!(nodes["nodes"], Dict(

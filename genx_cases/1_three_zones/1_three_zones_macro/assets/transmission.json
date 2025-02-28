@@ -13,7 +13,8 @@
         },
         "instance_data": [
             {
-                "edge": {
+                "id": "MA_to_CT",
+                "edges": {
                     "elec_edge": {
                         "can_retire": false,
                         "constraints": {
@@ -28,11 +29,11 @@
                         "existing_capacity": 2950,
                         "investment_cost": 12060
                     }
-                },
-                "id": "MA_to_CT"
+                }
             },
             {
-                "edge": {
+                "id": "MA_to_ME",
+                "edges": {
                     "elec_edge": {
                         "can_retire": false,
                         "constraints": {
@@ -47,8 +48,7 @@
                         "existing_capacity": 2000,
                         "investment_cost": 19261
                     }
-                },
-                "id": "MA_to_ME"
+                }
             }
         ],
         "type": "PowerLine"

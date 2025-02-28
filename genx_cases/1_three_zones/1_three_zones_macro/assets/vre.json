@@ -19,7 +19,7 @@
             {
                 "id": "MA_solar_pv",
                 "edges": {
-                    "elec_edge": {
+                    "edge": {
                         "can_retire": false,
                         "max_capacity": -1,
                         "can_expand": true,
@@ -46,7 +46,7 @@
             {
                 "id": "CT_onshore_wind",
                 "edges": {
-                    "elec_edge": {
+                    "edge": {
                         "can_retire": false,
                         "max_capacity": -1,
                         "can_expand": true,
@@ -73,7 +73,7 @@
             {
                 "id": "CT_solar_pv",
                 "edges": {
-                    "elec_edge": {
+                    "edge": {
                         "can_retire": false,
                         "max_capacity": -1,
                         "can_expand": true,
@@ -100,7 +100,7 @@
             {
                 "id": "ME_onshore_wind",
                 "edges": {
-                    "elec_edge": {
+                    "edge": {
                         "can_retire": false,
                         "max_capacity": -1,
                         "can_expand": true,

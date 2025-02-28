@@ -11,7 +11,7 @@ function make_timedata_json(inputs::Dict, setup::Dict, commodities_vec::Vector{S
 
     if setup["TimeDomainReduction"]==1
         time_data["TotalHoursModeled"] = sum(inputs["Weights"])
-        time_data["PeriodMap"] = Dict("path"=>joinpath(genx_case_path,setup["TimeDomainReductionFolder"]))
+        time_data["PeriodMap"] = Dict("path"=>"../"*setup["TimeDomainReductionFolder"]*"/Period_map.csv")
     end
 
     open(joinpath(macro_case,"System/time_data.json"), "w") do io

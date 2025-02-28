@@ -1,6 +1,6 @@
 {
     "PeriodMap": {
-        "path": "genx_cases/1_three_zones/TDR_results"
+        "path": "../TDR_results/Period_map.csv"
     },
     "HoursPerTimeStep": {
         "NaturalGas": 1,

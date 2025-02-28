@@ -27,7 +27,7 @@ function make_transmission_json(inputs::Dict, macro_case::AbstractString)
         push!(transmission["transmission"]["instance_data"],
             Dict(
                "id" => start_region*"_to_"*end_region,
-               "edge" => Dict(
+               "edges" => Dict(
                 "elec_edge" => Dict(
                     "start_vertex" => "elec_"*start_region,
                     "end_vertex" => "elec_"*end_region,

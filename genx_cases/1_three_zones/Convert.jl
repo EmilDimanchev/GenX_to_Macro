@@ -16,4 +16,3 @@ thermal = make_thermal_json(inputs, macro_case_path);
 vre = make_vre_json(inputs, macro_case_path);
 storage = make_storage_json(inputs, setup, macro_case_path);
 transmission = make_transmission_json(inputs, macro_case_path);
-
