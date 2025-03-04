@@ -5,8 +5,7 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString)
                             "type"=>"VRE",
                             "global_data"=>Dict(
                                 "transforms" => Dict(
-                                                    "timedata" => "Electricity",
-                                                    "constraints" => Dict("BalanceConstraint" => true)
+                                                    "timedata" => "Electricity"
                                                 ),
                                 "edges" => Dict(
                                             "edge" => Dict(
@@ -39,11 +38,11 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString)
         
         constraints_dict = Dict("CapacityConstraint" => true)
 
-        if get(gen(y),:min_capacity_mw,0)>0
+        if gen(y).min_cap_mw >0
             constraints_dict["MinCapacityConstraint"] = true
         end
 
-        if get(gen(y),:max_capacity_mw,0)>0
+        if gen(y).max_cap_mw >0
             constraints_dict["MaxCapacityConstraint"] = true
         end
 

@@ -28,7 +28,7 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
     demand = DataFrame(inputs["pD"], demand_headers);
     CSV.write(joinpath(macro_case,"System/demand.csv"), demand)
 
-    fuel_names = inputs["fuels"];
+    fuel_names = setdiff(inputs["fuels"],["None"]);
 
     #### Here we assume NG is the only fuel but can be extended to other fuels adding more nodes to vector node["nodes"]
     push!(nodes["nodes"], Dict(
@@ -38,13 +38,33 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
         )
     )
     for f in fuel_names
-        node_instance = Dict(
-            "id" => f,
-            "price" => Dict("timeseries" => Dict("path" => "system/fuel_prices.csv",
-                                                "header" => f))
-        )
-        push!(nodes["nodes"][2]["instance_data"], node_instance)
+        if occursin("gas",f) || occursin("_NG",f)
+            node_instance = Dict(
+                "id" => f,
+                "price" => Dict("timeseries" => Dict("path" => "system/fuel_prices.csv",
+                                                    "header" => f))
+            )
+            push!(nodes["nodes"][2]["instance_data"], node_instance)
+        end
     end
+
+    push!(nodes["nodes"], Dict(
+        "type" => "Uranium",
+        "global_data"=> Dict("time_interval" => "Uranium"),
+        "instance_data" => Vector{Dict{AbstractString,Any}}()
+        )
+    )
+    for f in fuel_names
+        if occursin("uranium",f)
+            node_instance = Dict(
+                "id" => f,
+                "price" => Dict("timeseries" => Dict("path" => "system/fuel_prices.csv",
+                                                    "header" => f))
+            )
+            push!(nodes["nodes"][3]["instance_data"], node_instance)
+        end
+    end
+
     fuel_prices = DataFrame([inputs["fuel_costs"][f]/conv_mmbtu_to_mwh for f in fuel_names], fuel_names);
     CSV.write(joinpath(macro_case,"System/fuel_prices.csv"), fuel_prices)
 
@@ -58,6 +78,17 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
                 for z in findall(x -> x == 1, inputs["dfCO2CapZones"][:, cap])))
             )
             for cap in 1:inputs["NCO2Cap"]
+        ]
+        )
+    )
+
+    push!(nodes["nodes"], Dict(
+        "type" => "Electricity",
+        "global_data"=> Dict("time_interval" => "Electricity"),
+        "instance_data" => [
+            Dict(
+                "id" => "water_node",
+            )
         ]
         )
     )

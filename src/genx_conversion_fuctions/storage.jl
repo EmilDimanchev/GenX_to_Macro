@@ -32,37 +32,37 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
             storage_constraints_dict["LongDurationStorageImplicitMinMaxConstraint"] = true
         end
 
-        if get(gen(y),:min_cap_mw,0)>0
+        if gen(y).min_cap_mw>0
             discharge_constraints_dict["MinCapacityConstraint"] = true
         end
 
-        if get(gen(y),:max_cap_mw,0)>0
+        if gen(y).max_cap_mw>0
             discharge_constraints_dict["MaxCapacityConstraint"] = true
         end
 
-        if get(gen(y),:min_cap_mwh,0)>0
+        if gen(y).min_cap_mwh>0
             storage_constraints_dict["MinCapacityConstraint"] = true
         end
 
-        if get(gen(y),:max_cap_mwh,0)>0
+        if gen(y).max_cap_mwh>0
             storage_constraints_dict["MaxCapacityConstraint"] = true
         end
 
-        if get(gen(y), :min_duration, 0) > 0
+        if gen(y).min_duration > 0
             storage_constraints_dict["StorageMinDurationConstraint"] = true
         end
 
-        if get(gen(y), :max_duration, 0) >= 0
+        if gen(y).max_duration > 0
             storage_constraints_dict["StorageMaxDurationConstraint"] = true
         end
 
         if y in inputs["STOR_ASYMMETRIC"]
             charge_constraints_dict["CapacityConstraint"] = true
-            if get(gen(y),:min_charge_capacity_mw,0)>0
+            if gen(y).min_charge_capacity_mw>0
                 charge_constraints_dict["MinCapacityConstraint"] = true
             end
     
-            if get(gen(y),:max_charge_capacity_mw,0)>0
+            if gen(y).max_charge_capacity_mw>0
                 charge_constraints_dict["MaxCapacityConstraint"] = true
             end
         else
@@ -114,13 +114,13 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                         "capacity_size" => 1.0,
                         "constraints" => charge_constraints_dict,
                         "efficiency" => gen(y).eff_down,
-                        "existing_capacity" => get(gen(y), :existing_charge_cap_mw, 0.0),
-                        "fixed_om_cost" => get(gen(y), :fixed_om_cost_charge_per_mwyr,0.0),
+                        "existing_capacity" => gen(y).existing_charge_cap_mw,
+                        "fixed_om_cost" => gen(y).fixed_om_cost_charge_per_mwyr,
                         "has_capacity" => in(y,inputs["STOR_ASYMMETRIC"]),
-                        "investment_cost" => get(gen(y), :inv_cost_charge_per_mwyr,0.0),
-                        "max_capacity" => get(gen(y), :max_charge_cap_mw,0.0),
-                        "min_capacity" => get(gen(y), :min_charge_cap_mw,0.0),
-                        "variable_om_cost" => get(gen(y), :var_om_cost_per_mwh_in,0.0)
+                        "investment_cost" => gen(y).inv_cost_charge_per_mwyr,
+                        "max_capacity" => gen(y).max_charge_cap_mw,
+                        "min_capacity" => gen(y).min_charge_cap_mw,
+                        "variable_om_cost" => gen(y).var_om_cost_per_mwh_in
                     ),
                 )
             )

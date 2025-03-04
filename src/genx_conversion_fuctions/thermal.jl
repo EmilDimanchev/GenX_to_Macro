@@ -23,12 +23,11 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString)
     gen(y) = inputs["RESOURCES"][y];
     thermal_availability = DataFrame();
     for y in THERM_ALL
-
-        if occursin("natural_gas",gen(y).resource)
+        if occursin("gas",gen(y).fuel)
             fuel_type = "NaturalGas"
-        elseif occursin("coal",gen(y).resource)
+        elseif occursin("coal",gen(y).fuel)
             fuel_type = "Coal"
-        elseif occursin("nuclear",gen(y).resource)
+        elseif occursin("uranium",gen(y).fuel)
             fuel_type = "Uranium"
         end
 
@@ -58,15 +57,15 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString)
             )
         end
 
-        if get(gen(y),:min_power,0) >0
+        if gen(y).min_power >0
             constraints_dict["MinFlowConstraint"] = true
         end
 
-        if get(gen(y),:min_capacity_mw,0)>0
+        if gen(y).min_cap_mw >0
             constraints_dict["MinCapacityConstraint"] = true
         end
 
-        if get(gen(y),:max_capacity_mw,0)>0
+        if gen(y).max_cap_mw >0
             constraints_dict["MaxCapacityConstraint"] = true
         end
 
