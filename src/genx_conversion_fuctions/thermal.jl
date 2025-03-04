@@ -78,7 +78,7 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString)
                 "transforms"=> Dict(
                     "timedata" => fuel_type,
                     "emission_rate" =>  inputs["fuel_CO2"][gen(y).fuel]/conv_mmbtu_to_mwh,
-                    "efficiency_rate" => 1/(conv_mmbtu_to_mwh * gen(y).heat_rate_mmbtu_per_mwh)
+                    "fuel_consumption" => conv_mmbtu_to_mwh * gen(y).heat_rate_mmbtu_per_mwh
                 ),
                 "edges" => Dict(
                     "elec_edge" => Dict(
@@ -102,7 +102,7 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString)
                         "min_down_time" => gen(y).down_time,
                         "min_up_time" => gen(y).up_time,
                         "startup_cost" => gen(y).start_cost_per_mw,
-                        "startup_fuel" => conv_mmbtu_to_mwh * gen(y).start_fuel_mmbtu_per_mw
+                        "startup_fuel_consumption" => conv_mmbtu_to_mwh * gen(y).start_fuel_mmbtu_per_mw
                     ),
                     "fuel_edge" => Dict(
                         "type" => fuel_type,
