@@ -6,7 +6,7 @@ function make_transmission_json(inputs::Dict, macro_case::AbstractString)
         "global_data" => Dict(
             "edges" => Dict(
                 "elec_edge" => Dict(
-                    "type"=>"Electricity",
+                    "commodity"=>"Electricity",
                     "has_capacity" => true,
                     "unidirectional" => false,
                     )

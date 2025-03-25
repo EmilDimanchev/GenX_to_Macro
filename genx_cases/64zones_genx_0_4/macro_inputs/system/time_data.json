@@ -8,7 +8,7 @@
         "Electricity": 1,
         "CO2": 1
     },
-    "PeriodLength": 72,
+    "NumberOfSubperiods": 3,
     "HoursPerSubperiod": {
         "NaturalGas": 24,
         "Uranium": 24,

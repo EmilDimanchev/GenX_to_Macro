@@ -32,7 +32,7 @@
                 "edges": {
                     "co2_edge": {
                         "end_vertex": "co2_sink_1",
-                        "type": "CO2"
+                        "commodity": "CO2"
                     },
                     "elec_edge": {
                         "can_retire": false,
@@ -61,13 +61,13 @@
                         "availability": [
                             1
                         ],
-                        "type": "Electricity",
+                        "commodity": "Electricity",
                         "existing_capacity": 0,
                         "ramp_down_fraction": 0.64
                     },
                     "fuel_edge": {
                         "start_vertex": "MA_NG",
-                        "type": "NaturalGas"
+                        "commodity": "NaturalGas"
                     }
                 }
             },
@@ -81,7 +81,7 @@
                 "edges": {
                     "co2_edge": {
                         "end_vertex": "co2_sink_2",
-                        "type": "CO2"
+                        "commodity": "CO2"
                     },
                     "elec_edge": {
                         "can_retire": false,
@@ -110,13 +110,13 @@
                         "availability": [
                             1
                         ],
-                        "type": "Electricity",
+                        "commodity": "Electricity",
                         "existing_capacity": 0,
                         "ramp_down_fraction": 0.64
                     },
                     "fuel_edge": {
                         "start_vertex": "CT_NG",
-                        "type": "NaturalGas"
+                        "commodity": "NaturalGas"
                     }
                 }
             },
@@ -130,7 +130,7 @@
                 "edges": {
                     "co2_edge": {
                         "end_vertex": "co2_sink_3",
-                        "type": "CO2"
+                        "commodity": "CO2"
                     },
                     "elec_edge": {
                         "can_retire": false,
@@ -159,13 +159,13 @@
                         "availability": [
                             1
                         ],
-                        "type": "Electricity",
+                        "commodity": "Electricity",
                         "existing_capacity": 0,
                         "ramp_down_fraction": 0.64
                     },
                     "fuel_edge": {
                         "start_vertex": "ME_NG",
-                        "type": "NaturalGas"
+                        "commodity": "NaturalGas"
                     }
                 }
             }

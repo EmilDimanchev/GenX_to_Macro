@@ -2,7 +2,7 @@ function make_timedata_json(inputs::Dict, setup::Dict, commodities_vec::Vector{S
 
     time_data = Dict("HoursPerSubperiod"=>Dict{AbstractString,Int64}(),
                 "HoursPerTimeStep"=>Dict{AbstractString,Int64}(),
-                "PeriodLength"=>inputs["T"])
+                "NumberOfSubperiods"=>inputs["REP_PERIOD"])
 
     for c in commodities_vec
         time_data["HoursPerSubperiod"][c] = inputs["H"]

@@ -8,7 +8,7 @@ function make_mustrun_json(inputs::Dict, macro_case::AbstractString)
                                                 ),
                                 "edges" => Dict(
                                             "elec_edge" => Dict(
-                                                "type" => "Electricity",
+                                                "commodity" => "Electricity",
                                                 "unidirectional" => true,
                                                 "has_capacity" => true,
                                                 ),
@@ -54,7 +54,7 @@ function make_mustrun_json(inputs::Dict, macro_case::AbstractString)
                 "edges" => Dict(
                     "elec_edge" => Dict(
                         "end_vertex" => "elec_" * gen(y).region,
-                        "type" => "Electricity",
+                        "commodity" => "Electricity",
                         "constraints" => constraints_dict,
                         "availability" => gen_availability,
                         "can_retire" => in(y,inputs["RET_CAP"]),

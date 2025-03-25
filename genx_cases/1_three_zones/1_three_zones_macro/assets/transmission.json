@@ -7,7 +7,7 @@
                 "elec_edge": {
                     "unidirectional": false,
                     "has_capacity": true,
-                    "type": "Electricity"
+                    "commodity": "Electricity"
                 }
             }
         },

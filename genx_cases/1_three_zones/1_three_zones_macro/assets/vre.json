@@ -11,7 +11,7 @@
                 "edge": {
                     "unidirectional": true,
                     "has_capacity": true,
-                    "type": "Electricity"
+                    "commodity": "Electricity"
                 }
             }
         },
@@ -38,7 +38,7 @@
                                 "path": "system/vre_availability.csv"
                             }
                         },
-                        "type": "Electricity",
+                        "commodity": "Electricity",
                         "existing_capacity": 0
                     }
                 }
@@ -65,7 +65,7 @@
                                 "path": "system/vre_availability.csv"
                             }
                         },
-                        "type": "Electricity",
+                        "commodity": "Electricity",
                         "existing_capacity": 0
                     }
                 }
@@ -92,7 +92,7 @@
                                 "path": "system/vre_availability.csv"
                             }
                         },
-                        "type": "Electricity",
+                        "commodity": "Electricity",
                         "existing_capacity": 0
                     }
                 }
@@ -119,7 +119,7 @@
                                 "path": "system/vre_availability.csv"
                             }
                         },
-                        "type": "Electricity",
+                        "commodity": "Electricity",
                         "existing_capacity": 0
                     }
                 }

@@ -8,11 +8,11 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                                                             ),
                                             "edges" => Dict(
                                                         "discharge_edge" => Dict(
-                                                                            "type" => "Electricity",
+                                                                            "commodity" => "Electricity",
                                                                             "unidirectional" => true,
                                                                             ),
                                                         "charge_edge" => Dict(
-                                                                            "type" => "Electricity",
+                                                                            "commodity" => "Electricity",
                                                                             "unidirectional" => true,
                                                                             )
                                             ),

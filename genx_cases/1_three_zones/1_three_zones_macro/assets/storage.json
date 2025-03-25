@@ -7,11 +7,11 @@
             "edges": {
                 "discharge_edge": {
                     "unidirectional": true,
-                    "type": "Electricity"
+                    "commodity": "Electricity"
                 },
                 "charge_edge": {
                     "unidirectional": true,
-                    "type": "Electricity"
+                    "commodity": "Electricity"
                 }
             }
         },

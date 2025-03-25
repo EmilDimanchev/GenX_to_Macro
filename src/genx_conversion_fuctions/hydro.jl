@@ -8,17 +8,17 @@ function make_hydro_json(inputs::Dict, setup::Dict, macro_case::AbstractString)
                                                             ),
                                             "edges" => Dict(
                                                         "discharge_edge" => Dict(
-                                                                            "type" => "Electricity",
+                                                                            "commodity" => "Electricity",
                                                                             "unidirectional" => true,
                                                                             "has_capacity" => true
                                                                             ),
                                                         "spill_edge" => Dict(
-                                                                            "type" => "Electricity",
+                                                                            "commodity" => "Electricity",
                                                                             "unidirectional" => true,
                                                                             "has_capacity" => false
                                                                             ),
                                                         "inflow_edge" => Dict(
-                                                                            "type" => "Electricity",
+                                                                            "commodity" => "Electricity",
                                                                             "unidirectional" => true,
                                                                             "has_capacity" => true
                                                                             )
@@ -128,7 +128,7 @@ function make_hydro_json(inputs::Dict, setup::Dict, macro_case::AbstractString)
                     "variable_om_cost" => 0.0
                 ),
                 "spill_edge" => Dict(
-                        "type" => "Electricity",
+                        "commodity" => "Electricity",
                         "end_vertex" => "water_node"
                 )
             )

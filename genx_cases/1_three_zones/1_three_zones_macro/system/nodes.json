@@ -50,7 +50,7 @@
                     "id": "elec_ME"
                 }
             ],
-            "type": "Electricity"
+            "commodity": "Electricity"
         },
         {
             "global_data": {
@@ -94,7 +94,7 @@
                     "id": "None"
                 }
             ],
-            "type": "NaturalGas"
+            "commodity": "NaturalGas"
         },
         {
             "global_data": {
@@ -129,7 +129,7 @@
                     "id": "co2_sink_3"
                 }
             ],
-            "type": "CO2"
+            "commodity": "CO2"
         }
     ]
 }

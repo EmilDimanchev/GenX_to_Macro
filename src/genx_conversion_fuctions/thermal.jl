@@ -82,7 +82,7 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString)
                 "edges" => Dict(
                     "elec_edge" => Dict(
                         "end_vertex" => "elec_" * gen(y).region,
-                        "type" => "Electricity",
+                        "commodity" => "Electricity",
                         "uc" => in(y,inputs["THERM_COMMIT"]),
                         "constraints" => constraints_dict,
                         "availability" => gen_availability,
@@ -104,11 +104,11 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString)
                         "startup_fuel_consumption" => conv_mmbtu_to_mwh * gen(y).start_fuel_mmbtu_per_mw
                     ),
                     "fuel_edge" => Dict(
-                        "type" => fuel_type,
+                        "commodity" => fuel_type,
                         "start_vertex" => gen(y).fuel
                         ),
                     "co2_edge" => Dict(
-                        "type" => "CO2",
+                        "commodity" => "CO2",
                         "end_vertex" => "co2_sink_$co2cap"
                     )
                 )
