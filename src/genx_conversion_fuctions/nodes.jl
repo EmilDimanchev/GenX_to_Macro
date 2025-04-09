@@ -1,7 +1,7 @@
 function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractString)
     gen = inputs["RESOURCES"];
     nodes = Dict("nodes"=> [ Dict(
-        "commodity" => "Electricity",
+        "type" => "Electricity",
         "global_data"=> Dict("time_interval" => "Electricity",
                             "constraints" => Dict("BalanceConstraint" => true,
                                                     "MaxNonServedDemandConstraint" => true,
@@ -32,7 +32,7 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
 
     #### Here we assume NG is the only fuel but can be extended to other fuels adding more nodes to vector node["nodes"]
     push!(nodes["nodes"], Dict(
-        "commodity" => "NaturalGas",
+        "type" => "NaturalGas",
         "global_data"=> Dict("time_interval" => "NaturalGas"),
         "instance_data" => Vector{Dict{AbstractString,Any}}()
         )
@@ -49,7 +49,7 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
     end
 
     push!(nodes["nodes"], Dict(
-        "commodity" => "Uranium",
+        "type" => "Uranium",
         "global_data"=> Dict("time_interval" => "Uranium"),
         "instance_data" => Vector{Dict{AbstractString,Any}}()
         )
@@ -69,7 +69,7 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
     CSV.write(joinpath(macro_case,"System/fuel_prices.csv"), fuel_prices)
 
     push!(nodes["nodes"], Dict(
-        "commodity" => "CO2",
+        "type" => "CO2",
         "global_data"=> Dict("time_interval" => "CO2"),
         "instance_data" => [
             Dict("id" => "co2_sink_$cap",
@@ -83,7 +83,7 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
     )
 
     push!(nodes["nodes"], Dict(
-        "commodity" => "Electricity",
+        "type" => "Electricity",
         "global_data"=> Dict("time_interval" => "Electricity"),
         "instance_data" => [
             Dict(

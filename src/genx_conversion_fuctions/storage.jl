@@ -28,6 +28,36 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
         storage_constraints_dict = Dict("BalanceConstraint" => true, "StorageCapacityConstraint" => true)
         charge_constraints_dict  = Dict();
 
+        try gen(y).lds
+        catch
+            gen(y).lds = 0
+        end
+
+        try gen(y).existing_charge_cap_mw
+        catch
+            gen(y).existing_charge_cap_mw = 0.0
+        end
+
+        try gen(y).fixed_om_cost_charge_per_mwyr
+        catch
+            gen(y).fixed_om_cost_charge_per_mwyr = 0.0
+        end
+
+        try gen(y).inv_cost_charge_per_mwyr
+        catch
+            gen(y).inv_cost_charge_per_mwyr = 0.0
+        end
+
+        try gen(y).max_charge_cap_mw
+        catch
+            gen(y).max_charge_cap_mw = 0.0
+        end
+        
+        try gen(y).min_charge_cap_mw
+        catch
+            gen(y).min_charge_cap_mw = 0.0
+        end
+
         if setup["LDSAdditionalConstraints"]== 1 && gen(y).lds==1
             storage_constraints_dict["LongDurationStorageImplicitMinMaxConstraint"] = true
         end

@@ -23,7 +23,7 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString)
     gen(y) = inputs["RESOURCES"][y];
     thermal_availability = DataFrame();
     for y in THERM_ALL
-        if occursin("gas",gen(y).fuel)
+        if occursin("gas",gen(y).fuel) || occursin("_NG",gen(y).fuel)
             fuel_type = "NaturalGas"
         elseif occursin("coal",gen(y).fuel)
             fuel_type = "Coal"
