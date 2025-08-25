@@ -55,7 +55,7 @@ function make_hydro_json(inputs::Dict, setup::Dict, macro_case::AbstractString)
 
         if in(y,inputs["HYDRO_RES_KNOWN_CAP"])
             storage_constraints_dict["StorageMaxDurationConstraint"] = true
-            storage_constraints_dict["StorageCapacityConstraint"] => true
+            storage_constraints_dict["StorageCapacityConstraint"] = true
         end
 
         if gen(y).min_cap_mw>0
