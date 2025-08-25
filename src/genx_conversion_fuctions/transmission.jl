@@ -2,10 +2,10 @@ function make_transmission_json(inputs::Dict, macro_case::AbstractString)
 
     transmission = Dict(
         "transmission" => Dict(
-        "type" => "PowerLine",
+        "type" => "TransmissionLink",
         "global_data" => Dict(
             "edges" => Dict(
-                "elec_edge" => Dict(
+                "transmission_edge" => Dict(
                     "commodity"=>"Electricity",
                     "has_capacity" => true,
                     "unidirectional" => false,
@@ -28,7 +28,7 @@ function make_transmission_json(inputs::Dict, macro_case::AbstractString)
             Dict(
                "id" => start_region*"_to_"*end_region,
                "edges" => Dict(
-                "elec_edge" => Dict(
+                "transmission_edge" => Dict(
                     "start_vertex" => "elec_"*start_region,
                     "end_vertex" => "elec_"*end_region,
                     "can_expand" => in(l,inputs["EXPANSION_LINES"]),
