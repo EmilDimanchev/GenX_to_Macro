@@ -1,0 +1,11 @@
+Resource,Zone,New_Build,Can_Retire,Existing_Cap_MW,region,technology,cluster,Cap_Size,minimum_load_mw,Heat_Rate_MMBTU_per_MWh,Fixed_OM_Cost_per_MWyr,heat_rate_mmbtu_mwh_iqr,heat_rate_mmbtu_mwh_std,Min_Power,num_units,capacity_factor,unmodified_cap_size,LDS,variable_CF,Eff_Up,Eff_Down,Ramp_Up_Percentage,Ramp_Dn_Percentage,Hydro_Energy_to_Power_Ratio,min_cap_mw,max_cap_mw,inv_cost_per_mwyr,var_om_cost_per_mwh
+AZ_conventional_hydroelectric_1,1,0,0,2762.5,AZ,Conventional Hydroelectric,1,98.66,0.357,8.77,47048,0,0.082,0,28,0.267,98.661,0,0.297774673,1,1,0.5,0.5,1.191098651,0,0,0,0
+CA_conventional_hydroelectric_1,2,0,0,8039.2,CA,Conventional Hydroelectric,1,59.55,3.619,8.77,47048,0,0.133,0,135,0.332,59.55,0,0.336756408,1,1,0.5,0.5,1.347025568,0,0,0,0
+CO_conventional_hydroelectric_1,3,0,0,470.4,CO,Conventional Hydroelectric,1,42.76,0,8.77,47048,0.443,0.212,0,11,0.26,42.764,0,0.302024037,1,1,0.5,0.5,1.20809612,0,0,0,0
+ID_conventional_hydroelectric_1,4,0,0,2182.8,ID,Conventional Hydroelectric,1,45.48,11.458,8.77,47048,0,0.088,0,48,0.409,45.475,0,0.456485242,1,1,0.5,0.5,1.825941019,0,0,0,0
+MT_conventional_hydroelectric_1,5,0,0,2730.7,MT,Conventional Hydroelectric,1,54.61,14.38,8.77,47048,0,0.147,0,50,0.415,54.614,0,0.453323454,1,1,0.5,0.5,1.813293941,0,0,0,0
+NV_conventional_hydroelectric_1,7,0,0,1039.4,NV,Conventional Hydroelectric,1,115.49,0,8.77,47048,0,0,0,9,0.206,115.489,0,0.243506715,1,1,0.5,0.5,1,0,0,0,0
+OR_conventional_hydroelectric_1,8,0,0,7674.4,OR,Conventional Hydroelectric,1,69.14,22.081,8.77,47048,0,0.058,0,111,0.47,69.139,0,0.485239178,1,1,0.5,0.5,1.940956621,0,0,0,0
+UT_conventional_hydroelectric_1,9,0,0,151.8,UT,Conventional Hydroelectric,1,50.6,0,8.77,47048,0.111,0.222,0,3,0.397,50.6,0,0.32501179,1,1,0.5,0.5,1.300046961,0,0,0,0
+WA_conventional_hydroelectric_1,10,0,0,20628.4,WA,Conventional Hydroelectric,1,97.3,26.588,8.77,47048,0,0.104,0,212,0.396,97.304,0,0.434220195,1,1,0.5,0.5,1.736880755,0,0,0,0
+WY_conventional_hydroelectric_1,11,0,0,232.9,WY,Conventional Hydroelectric,1,19.41,0,8.77,47048,0,0.161,0,12,0.358,19.408,0,0.344945759,1,1,0.5,0.5,1.37978301,0,0,0,0

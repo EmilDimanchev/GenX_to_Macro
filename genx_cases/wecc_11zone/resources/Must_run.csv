@@ -1,0 +1,28 @@
+Resource,Zone,New_Build,Can_Retire,Existing_Cap_MW,region,technology,cluster,Cap_Size,minimum_load_mw,Heat_Rate_MMBTU_per_MWh,Fixed_OM_Cost_per_MWyr,heat_rate_mmbtu_mwh_iqr,heat_rate_mmbtu_mwh_std,num_units,capacity_factor,unmodified_cap_size,Commit,variable_CF,min_cap_mw,max_cap_mw,inv_cost_per_mwyr,var_om_cost_per_mwh
+AZ_biomass_1,1,0,0,12.7,AZ,Biomass,1,4.24,1.533,15.49,0,1.73,2.983,3,0.501,8.467,1,0,0,0,0,0
+AZ_small_hydroelectric_1,1,0,0,14.6,AZ,Small Hydroelectric,1,1.62,2.244,9.01,47048,0.596,0.295,9,0.193,8.378,0,0.297774673,0,0,0,0
+CA_biomass_1,2,0,0,141.6,CA,Biomass,1,1.91,2.135,15.7,0,2.775,2.971,74,0.349,5.476,1,0,0,0,0,0
+CA_geothermal_1,2,0,0,977,CA,Geothermal,1,46.52,16.286,8.77,209101,0,0.094,21,0.784,46.524,0,0,0,0,0,0
+CA_small_hydroelectric_1,2,0,0,238,CA,Small Hydroelectric,1,1.78,0.698,8.77,47048,0,0.023,134,0.308,5.773,0,0.336756408,0,0,0,0
+CO_biomass_1,3,0,0,9.2,CO,Biomass,1,0.92,0.7,11.87,0,3.762,2.122,10,0.333,2.75,1,0,0,0,0,0
+CO_small_hydroelectric_1,3,0,0,74.7,CO,Small Hydroelectric,1,1.56,0.592,8.77,47048,0,0.001,48,0.39,3.99,0,0.302024037,0,0,0,0
+ID_biomass_1,4,0,0,7.6,ID,Biomass,1,0.63,0.808,11.09,0,1.8,1.257,12,0.322,1.967,1,0,0,0,0,0
+ID_geothermal_1,4,0,0,12.2,ID,Geothermal,1,12.2,0.5,8.77,209101,0,0,1,0.808,12.2,0,0,0,0,0,0
+ID_small_hydroelectric_1,4,0,0,198.9,ID,Small Hydroelectric,1,1.74,0.72,8.77,47048,0,0,114,0.47,3.714,0,0.456485242,0,0,0,0
+MT_biomass_1,5,0,0,2,MT,Biomass,1,1.02,0.4,9.36,0,0.075,0.087,2,0.637,1.6,1,0,0,0,0,0
+MT_small_hydroelectric_1,5,0,0,57.5,MT,Small Hydroelectric,1,3.6,0.831,8.77,47048,0,0,16,0.728,4.938,0,0.453323454,0,0,0,0
+NM_biomass_1,6,0,0,3.4,NM,Biomass,1,0.84,0.4,11.72,0,0.984,0.568,4,0.625,1.35,1,0,0,0,0,0
+NM_geothermal_1,6,0,0,13.8,NM,Geothermal,1,2.76,1.04,8.77,209101,0,0,5,0.38,2.76,0,0,0,0,0,0
+NM_small_hydroelectric_1,6,0,0,14.8,NM,Small Hydroelectric,1,1.64,1.722,8.77,47048,0,0,9,0.178,9.189,0,0.322813958,0,0,0,0
+NV_biomass_1,7,0,0,6.2,NV,Biomass,1,1.54,2,15.84,0,7.046,4.068,4,0.593,2.6,1,0,0,0,0,0
+NV_geothermal_1,7,0,0,668.7,NV,Geothermal,1,14.54,5.215,8.77,209101,0,0.189,46,0.49,14.537,0,0,0,0,0,0
+NV_small_hydroelectric_1,7,0,0,6.1,NV,Small Hydroelectric,1,0.76,0.238,8.77,47048,0,0,8,0.528,1.438,0,0.243506715,0,0,0,0
+OR_biomass_1,8,0,0,31,OR,Biomass,1,0.89,1.303,15.35,0,2.775,2.28,35,0.316,2.806,1,0,0,0,0,0
+OR_geothermal_1,8,0,0,28.5,OR,Geothermal,1,9.5,0.5,8.77,209101,0.111,0.222,3,0.718,9.5,0,0,0,0,0,0
+OR_small_hydroelectric_1,8,0,0,145.6,OR,Small Hydroelectric,1,2.08,2.384,8.77,47048,0,0.001,70,0.381,5.451,0,0.485239178,0,0,0,0
+UT_biomass_1,9,0,0,8.1,UT,Biomass,1,1.01,0.762,15.52,0,4.526,4.43,8,0.761,1.325,1,0,0,0,0,0
+UT_geothermal_1,9,0,0,72.8,UT,Geothermal,1,14.56,2,8.77,209101,0.443,0.233,5,0.578,14.56,0,0,0,0,0,0
+UT_small_hydroelectric_1,9,0,0,38.9,UT,Small Hydroelectric,1,0.76,0.296,8.77,47048,0,0.007,51,0.388,1.965,0,0.32501179,0,0,0,0
+WA_biomass_1,10,0,0,18.1,WA,Biomass,1,0.78,0.787,15.7,0,2.775,2.073,23,0.217,3.622,1,0,0,0,0,0
+WA_small_hydroelectric_1,10,0,0,293.6,WA,Small Hydroelectric,1,4.59,0.731,8.77,47048,0,0.001,64,0.836,5.488,0,0.434220195,0,0,0,0
+WY_small_hydroelectric_1,11,0,0,34.3,WY,Small Hydroelectric,1,1.91,0.1,8.77,47048,0,0,18,0.492,3.878,0,0.344945759,0,0,0,0
