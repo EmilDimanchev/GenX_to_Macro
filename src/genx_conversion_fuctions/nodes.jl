@@ -65,6 +65,23 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
         end
     end
 
+    push!(nodes["nodes"], Dict(
+        "type" => "Coal",
+        "global_data"=> Dict("time_interval" => "Coal"),
+        "instance_data" => Vector{Dict{AbstractString,Any}}()
+        )
+    )
+    for f in fuel_names
+        if occursin("coal",f)
+            node_instance = Dict(
+                "id" => f,
+                "price" => Dict("timeseries" => Dict("path" => "system/fuel_prices.csv",
+                                                    "header" => f))
+            )
+            push!(nodes["nodes"][4]["instance_data"], node_instance)
+        end
+    end
+
     fuel_prices = DataFrame([inputs["fuel_costs"][f]/conv_mmbtu_to_mwh for f in fuel_names], fuel_names);
     CSV.write(joinpath(macro_case,"System/fuel_prices.csv"), fuel_prices)
 
