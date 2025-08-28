@@ -227,6 +227,18 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
     )
 
     push!(nodes["nodes"], Dict(
+        "type" => "CO2",
+        "global_data"=> Dict("time_interval" => "CO2"),
+        "instance_data" => [
+            Dict("id" => "co2_sink_nothing",
+                "constraints" => Dict("CO2CapConstraint" => false),
+                "rhs_policy" => Dict("CO2CapConstraint" => 0)
+            )
+        ]
+        )
+    )
+
+    push!(nodes["nodes"], Dict(
         "type" => "Electricity",
         "global_data"=> Dict("time_interval" => "Electricity"),
         "instance_data" => [

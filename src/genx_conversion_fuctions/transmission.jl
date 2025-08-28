@@ -103,7 +103,7 @@ function make_transmission_json(inputs::Dict, macro_case::AbstractString, genx_s
                     ),
                     "existing_capacity" => inputs["pTrans_Max"][l],
                     "max_capacity" => inputs["pTrans_Max"][l] + inputs["pMax_Line_Reinforcement"][l],
-                    "investment_cost" => inputs["pC_Line_Reinforcement"][l],
+                    "annualized_investment_cost" => inputs["pC_Line_Reinforcement"][l],
                     "line_loss_percentage" => inputs["pPercent_Loss"][l]
                 )
                )

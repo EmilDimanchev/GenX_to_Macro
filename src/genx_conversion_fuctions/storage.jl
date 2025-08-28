@@ -304,7 +304,7 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                         "existing_capacity" => gen(y).existing_cap_mw,
                         "fixed_om_cost" => gen(y).fixed_om_cost_per_mwyr,
                         "has_capacity" => true,
-                        "investment_cost" => gen(y).inv_cost_per_mwyr,
+                        "annualized_investment_cost" => gen(y).inv_cost_per_mwyr,
                         "max_capacity" => gen(y).max_cap_mw,
                         "min_capacity" => 0,
                         "variable_om_cost" => gen(y).var_om_cost_per_mwh
@@ -319,7 +319,7 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                         "existing_capacity" => gen(y).existing_charge_cap_mw,
                         "fixed_om_cost" => gen(y).fixed_om_cost_charge_per_mwyr,
                         "has_capacity" => in(y,inputs["STOR_ASYMMETRIC"]),
-                        "investment_cost" => gen(y).inv_cost_charge_per_mwyr,
+                        "annualized_investment_cost" => gen(y).inv_cost_charge_per_mwyr,
                         "max_capacity" => gen(y).max_charge_cap_mw,
                         "min_capacity" => gen(y).min_charge_cap_mw,
                         "variable_om_cost" => gen(y).var_om_cost_per_mwh_in
