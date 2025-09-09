@@ -212,19 +212,19 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
     fuel_prices = DataFrame([inputs["fuel_costs"][f]/conv_mmbtu_to_mwh for f in fuel_names], fuel_names);
     CSV.write(joinpath(macro_case,string("System/fuel_prices_",stage_number,".csv")), fuel_prices)
 
-    push!(nodes["nodes"], Dict(
-        "type" => "CO2",
-        "global_data"=> Dict("time_interval" => "CO2"),
-        "instance_data" => [
-            Dict("id" => "co2_sink_$cap",
-                "constraints" => Dict("CO2CapConstraint" => true),
-                "rhs_policy" => Dict("CO2CapConstraint" => sum(inputs["dfMaxCO2"][z, cap]
-                for z in findall(x -> x == 1, inputs["dfCO2CapZones"][:, cap])))
-            )
-            for cap in 1:inputs["NCO2Cap"]
-        ]
-        )
-    )
+    # push!(nodes["nodes"], Dict(
+    #     "type" => "CO2",
+    #     "global_data"=> Dict("time_interval" => "CO2"),
+    #     "instance_data" => [
+    #         Dict("id" => "co2_sink_$cap",
+    #             "constraints" => Dict("CO2CapConstraint" => true),
+    #             "rhs_policy" => Dict("CO2CapConstraint" => sum(inputs["dfMaxCO2"][z, cap]
+    #             for z in findall(x -> x == 1, inputs["dfCO2CapZones"][:, cap])))
+    #         )
+    #         for cap in 1:inputs["NCO2Cap"]
+    #     ]
+    #     )
+    # )
 
     push!(nodes["nodes"], Dict(
         "type" => "CO2",

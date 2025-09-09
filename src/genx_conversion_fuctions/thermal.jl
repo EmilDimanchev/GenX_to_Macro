@@ -206,8 +206,9 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
             constraints_dict["MaxCapacityConstraint"] = true
         end
 
-        co2cap = findfirst(inputs["dfCO2CapZones"][gen(y).zone,:].==1)
-
+        # co2cap = findfirst(inputs["dfCO2CapZones"][gen(y).zone,:].==1)
+        co2cap = "co2_sink_nothing"
+        
         push!(thermal["ThermalPower"]["instance_data"],
             Dict(
                 "id" =>  gen(y).resource,
