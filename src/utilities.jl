@@ -48,6 +48,51 @@ function make_macro_dir(macro_case::AbstractString)
     end
 end
 
+function make_macro_dir(macro_case::AbstractString, stage_folders)
+    if !isdir(macro_case)
+        mkdir(macro_case)
+        mkdir(joinpath(macro_case,"system"))
+        mkdir(joinpath(macro_case,"assets"))
+        mkdir(joinpath(macro_case,"settings"))
+
+        all_stages = []
+        
+        sorted_folders = sort(stage_folders, by = s -> parse(Int, split(s, "p")[end]))
+
+        for stage in sorted_folders
+
+            stage_number = get_stage_number(stage)
+
+            system_data = Dict("commodities" => Dict("path" => "system/commodities.json"),
+                                "locations" => Dict("path" => "locations.json"),
+                                "settings" => Dict("path" => "settings/macro_settings.json"),
+                                "assets" => Dict("path" => string("assets/assets_",stage_number)),
+                                "time_data" => Dict("path" => "system/time_data.json"),
+                                "nodes" => Dict("path" => string("system/nodes_",stage_number,".json"))
+                                )
+
+            push!(all_stages, system_data)
+            
+        end
+
+        all_system_data = d = Dict(
+            "case" => all_stages,   # or any list you want here
+            "settings" => Dict(
+                "path" => "settings/case_settings.json"
+            )
+        )
+
+        open(joinpath(macro_case,"system_data.json"), "w") do io
+            JSON3.pretty(io, all_system_data)
+        end
+
+        open(joinpath(macro_case,"settings/macro_settings.json"), "w") do io
+            JSON3.pretty(io, Dict("ConstraintScaling"=>false))
+        end
+    end
+end
+
+
 function get_stage_number(stage_folder::AbstractString)
     
     m = match(r"\d+$", stage_folder)  # match digits at the end
