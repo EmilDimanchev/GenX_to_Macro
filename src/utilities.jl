@@ -76,7 +76,7 @@ function make_macro_dir(macro_case::AbstractString, stage_folders)
         end
 
         all_system_data = d = Dict(
-            "case" => all_stages,   # or any list you want here
+            "case" => all_stages,   
             "settings" => Dict(
                 "path" => "settings/case_settings.json"
             )
@@ -88,6 +88,11 @@ function make_macro_dir(macro_case::AbstractString, stage_folders)
 
         open(joinpath(macro_case,"settings/macro_settings.json"), "w") do io
             JSON3.pretty(io, Dict("ConstraintScaling"=>false))
+        end
+
+        open(joinpath(macro_case,"settings/case_settings.json"), "w") do io
+            JSON3.pretty(io, Dict(["PeriodLengths"=>ones(length(stage_folders)),"DiscountRate"=> 0.045,
+            "SolutionAlgorithm"=> "Monolithic"]))
         end
     end
 end
