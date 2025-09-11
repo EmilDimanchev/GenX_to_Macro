@@ -247,7 +247,7 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
                         ),
                     "co2_edge" => Dict(
                         "commodity" => "CO2",
-                        "end_vertex" => "co2_sink_$co2cap"
+                        "end_vertex" => co2cap
                     )
                 )
             )
