@@ -3,7 +3,7 @@
 using GenX_to_Macro
 
 # Get all stage folders
-genx_case = "wecc_11z_30p"
+genx_case = "name_of_case"
 output_case = genx_case
 path_to_all_cases = string("genx_cases/",genx_case,"/inputs")
 
@@ -13,6 +13,7 @@ genx_case_path = string("./genx_cases/",genx_case)
 macro_case_path = joinpath(genx_case_path,output_case)
 make_macro_dir(macro_case_path, stage_folders)
 
+# Depending on case, may need to add/remove commodities
 commodities_vec = ["Electricity", "NaturalGas", "CO2", "Uranium", "Coal"]
 
 for case_folder in stage_folders
