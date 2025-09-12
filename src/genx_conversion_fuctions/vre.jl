@@ -120,7 +120,7 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
             gen_availability = unique(pmax)
         else
             gen_availability = Dict("timeseries" => Dict(
-                                                        "path" => "system/vre_availability.csv",
+                                                        "path" => string("system/vre_availability_",stage_number,".csv"),
                                                         "header" => gen(y).resource))
 
             vre_availability[!,Symbol(gen(y).resource)] = pmax;
@@ -166,7 +166,7 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
     end
 
     if !isempty(vre_availability)
-        CSV.write(joinpath(macro_case,"system/vre_availability.csv"), vre_availability)
+        CSV.write(joinpath(macro_case,string("system/vre_availability_",stage_number,".csv")), vre_availability)
     end
 
     return vre
