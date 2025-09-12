@@ -48,6 +48,10 @@ function make_macro_dir(macro_case::AbstractString)
     end
 end
 
+# ~~~
+# Multistage version
+# ~~~
+
 function make_macro_dir(macro_case::AbstractString, stage_folders)
     if !isdir(macro_case)
         mkdir(macro_case)
@@ -67,7 +71,7 @@ function make_macro_dir(macro_case::AbstractString, stage_folders)
                                 "locations" => Dict("path" => "locations.json"),
                                 "settings" => Dict("path" => "settings/macro_settings.json"),
                                 "assets" => Dict("path" => string("assets/assets_",stage_number)),
-                                "time_data" => Dict("path" => "system/time_data.json"),
+                                "time_data" => Dict("path" => string("system/time_data_",stage_number,".json")),
                                 "nodes" => Dict("path" => string("system/nodes_",stage_number,".json"))
                                 )
 
