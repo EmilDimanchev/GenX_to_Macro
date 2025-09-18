@@ -18,6 +18,7 @@ export make_storage_json
 export make_hydro_json
 export make_transmission_json
 export get_stage_number
+export get_wacc_and_crp
 
 const conv_mmbtu_to_mwh = 0.29307107
 const conv_h2ton_to_mwh = 33.3

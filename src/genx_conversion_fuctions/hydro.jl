@@ -234,6 +234,8 @@ function make_hydro_json(inputs::Dict, setup::Dict, macro_case::AbstractString, 
             hydro_availability[!,Symbol(gen(y).resource)] = pmax;
         end
 
+        wacc, crp = get_wacc_and_crp(gen(y).resource, genx_stage_path)
+
         push!(hydrores["hydro_res"]["instance_data"],
         Dict(
             "id" =>  gen(y).resource,
@@ -267,7 +269,9 @@ function make_hydro_json(inputs::Dict, setup::Dict, macro_case::AbstractString, 
                     "min_capacity" => 0,
                     "ramp_down_fraction" => gen(y).ramp_dn_percentage,
                     "ramp_up_fraction" => gen(y).ramp_up_percentage,
-                    "variable_om_cost" => 0
+                    "variable_om_cost" => 0,
+                    "wacc" => wacc,
+                    "capital_recovery_period" => crp
                 ),
                 "inflow_edge" => Dict(
                     "availability" => gen_availability,

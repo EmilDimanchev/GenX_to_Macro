@@ -111,3 +111,14 @@ function get_stage_number(stage_folder::AbstractString)
 
     return num_str
 end
+
+function get_wacc_and_crp(resource::AbstractString, genx_stage_path::AbstractString)
+
+    df_inv_input = CSV.read(string(genx_stage_path,"/resources/Resource_multistage_data.csv"), DataFrame)
+    df_inv = select(df_inv_input, [:Resource, :WACC, :Capital_Recovery_Period])
+    wacc = filter(row -> row.Resource == resource, df_inv).WACC[1]
+    crp = filter(row -> row.Resource == resource, df_inv).Capital_Recovery_Period[1]
+
+    return wacc, crp
+
+end

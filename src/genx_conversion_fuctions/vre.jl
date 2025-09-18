@@ -137,6 +137,8 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
             constraints_dict["MaxCapacityConstraint"] = true
         end
 
+        wacc, crp = get_wacc_and_crp(gen(y).resource, genx_stage_path)
+
         push!(vre["VRE"]["instance_data"],
             Dict(
                 "id" =>  gen(y).resource,
@@ -155,6 +157,8 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
                         "max_capacity" => gen(y).max_cap_mw,
                         "min_capacity" => 0,
                         "variable_om_cost" => 0,
+                        "wacc" => wacc,
+                        "capital_recovery_period" => crp,
                     )
                 )
             )

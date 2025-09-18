@@ -271,6 +271,8 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
             storage_constraints_dict["StorageSymmetricCapacityConstraint"] = true
         end
 
+        # Get multi stage inputs investment inputs
+        wacc, crp = get_wacc_and_crp(gen(y).resource, genx_stage_path)
         
         push!(storage["elec_stor"]["instance_data"],
             Dict(
@@ -292,6 +294,8 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                     "min_capacity" => 0,
                     "min_duration" => gen(y).min_duration,
                     "min_storage_level" => 0.0,
+                    "wacc" => wacc,
+                    "capital_recovery_period" => crp
                 ),
                 "edges"=> Dict(
                     "discharge_edge" => Dict(
@@ -307,7 +311,9 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                         "annualized_investment_cost" => gen(y).inv_cost_per_mwyr,
                         "max_capacity" => gen(y).max_cap_mw,
                         "min_capacity" => 0,
-                        "variable_om_cost" => gen(y).var_om_cost_per_mwh
+                        "variable_om_cost" => gen(y).var_om_cost_per_mwh,
+                        "wacc" => wacc,
+                        "capital_recovery_period" => crp
                     ),
                     "charge_edge" => Dict(
                         "start_vertex" => "elec_" * gen(y).region,
@@ -322,7 +328,9 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                         "annualized_investment_cost" => gen(y).inv_cost_charge_per_mwyr,
                         "max_capacity" => gen(y).max_charge_cap_mw,
                         "min_capacity" => gen(y).min_charge_cap_mw,
-                        "variable_om_cost" => gen(y).var_om_cost_per_mwh_in
+                        "variable_om_cost" => gen(y).var_om_cost_per_mwh_in,
+                        "wacc" => wacc,
+                        "capital_recovery_period" => crp
                     ),
                 )
             )
