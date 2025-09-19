@@ -236,10 +236,14 @@ function make_hydro_json(inputs::Dict, setup::Dict, macro_case::AbstractString, 
 
         wacc, crp = get_wacc_and_crp(gen(y).resource, genx_stage_path)
 
+        # Get speed limits
+        speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
+        
         push!(hydrores["hydro_res"]["instance_data"],
         Dict(
             "id" =>  gen(y).resource,
-            "storage"=> Dict(
+            "storage"=> merge!(
+                Dict(
                 "can_expand" => in(y,inputs["NEW_CAP"]) && in(y,inputs["HYDRO_RES_KNOWN_CAP"]),
                 "capacity_size" => 1.0 * in(y,inputs["HYDRO_RES_KNOWN_CAP"]),
                 "can_retire" => in(y,inputs["RET_CAP"]) && in(y,inputs["HYDRO_RES_KNOWN_CAP"]),
@@ -252,9 +256,11 @@ function make_hydro_json(inputs::Dict, setup::Dict, macro_case::AbstractString, 
                 "loss_fraction" => 0.0,
                 "max_duration" => gen(y).hydro_energy_to_power_ratio * in(y,inputs["HYDRO_RES_KNOWN_CAP"]),
                 "min_outflow_fraction" => gen(y).min_power,
+            ), speed_limits  # Merge the speed_limits dictionary here
             ),
             "edges"=> Dict(
-                "discharge_edge" => Dict(
+                "discharge_edge" => merge!(
+                    Dict(
                     "availability"=>[1.0],
                     "end_vertex" => "elec_" * gen(y).region,
                     "can_expand" => in(y,inputs["NEW_CAP"]),
@@ -272,6 +278,7 @@ function make_hydro_json(inputs::Dict, setup::Dict, macro_case::AbstractString, 
                     "variable_om_cost" => 0,
                     "wacc" => wacc,
                     "capital_recovery_period" => crp
+                ), speed_limits  # Merge the speed_limits dictionary here
                 ),
                 "inflow_edge" => Dict(
                     "availability" => gen_availability,

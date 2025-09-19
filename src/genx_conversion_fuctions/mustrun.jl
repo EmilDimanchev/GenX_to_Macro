@@ -141,11 +141,15 @@ function make_mustrun_json(inputs::Dict, macro_case::AbstractString, genx_stage_
 
         wacc, crp = get_wacc_and_crp(gen(y).resource, genx_stage_path)
 
+        # Get speed limits
+        speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
+
         push!(mustrun["MustRun"]["instance_data"],
             Dict(
                 "id" =>  gen(y).resource,
                 "edges" => Dict(
-                    "elec_edge" => Dict(
+                    "elec_edge" => merge!(
+                        Dict(
                         "end_vertex" => "elec_" * gen(y).region,
                         "commodity" => "Electricity",
                         "constraints" => constraints_dict,
@@ -161,6 +165,7 @@ function make_mustrun_json(inputs::Dict, macro_case::AbstractString, genx_stage_
                         "variable_om_cost" => 0,
                         "wacc" => wacc,
                         "capital_recovery_period" => crp
+                    ),  speed_limits  # Merge the speed_limits dictionary here
                     )
                 )
             )

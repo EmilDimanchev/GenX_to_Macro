@@ -88,11 +88,15 @@ function make_transmission_json(inputs::Dict, macro_case::AbstractString, genx_s
         start_region = inputs["RESOURCES"][findfirst(g.zone==z_start for g in inputs["RESOURCES"])].region;
         end_region = inputs["RESOURCES"][findfirst(g.zone==z_end for g in inputs["RESOURCES"])].region;
         
+        # Get speed limits
+        speed_limits = get_speed_limits(start_region*"_to_"*end_region, genx_stage_path)
+
         push!(transmission["transmission"]["instance_data"],
             Dict(
                "id" => start_region*"_to_"*end_region,
                "edges" => Dict(
-                "transmission_edge" => Dict(
+                "transmission_edge" => merge!(
+                    Dict(
                     "start_vertex" => "elec_"*start_region,
                     "end_vertex" => "elec_"*end_region,
                     "can_expand" => in(l,inputs["EXPANSION_LINES"]),
@@ -105,7 +109,8 @@ function make_transmission_json(inputs::Dict, macro_case::AbstractString, genx_s
                     "max_capacity" => inputs["pTrans_Max"][l] + inputs["pMax_Line_Reinforcement"][l],
                     "annualized_investment_cost" => inputs["pC_Line_Reinforcement"][l],
                     "line_loss_percentage" => inputs["pPercent_Loss"][l]
-                )
+                ), speed_limits  # Merge the speed_limits dictionary here
+                ),
                )
 
             )

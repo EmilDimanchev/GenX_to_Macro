@@ -211,6 +211,8 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
 
         wacc, crp = get_wacc_and_crp(gen(y).resource, genx_stage_path)
         
+        speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
+        
         push!(thermal["ThermalPower"]["instance_data"],
             Dict(
                 "id" =>  gen(y).resource,
@@ -220,7 +222,8 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
                     "fuel_consumption" => conv_mmbtu_to_mwh * gen(y).heat_rate_mmbtu_per_mwh
                 ),
                 "edges" => Dict(
-                    "elec_edge" => Dict(
+                    "elec_edge" => merge!(
+                        Dict(
                         "end_vertex" => "elec_" * gen(y).region,
                         "commodity" => "Electricity",
                         "uc" => in(y,inputs["THERM_COMMIT"]),
@@ -244,6 +247,7 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
                         "startup_fuel_consumption" => conv_mmbtu_to_mwh * gen(y).start_fuel_mmbtu_per_mw,
                         "wacc" => wacc,
                         "capital_recovery_period" => crp
+                    ), speed_limits  # Merge the speed_limits dictionary here
                     ),
                     "fuel_edge" => Dict(
                         "commodity" => fuel_type,

@@ -139,17 +139,20 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
 
         wacc, crp = get_wacc_and_crp(gen(y).resource, genx_stage_path)
 
+        speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
+
         push!(vre["VRE"]["instance_data"],
-            Dict(
-                "id" =>  gen(y).resource,
-                "edges" => Dict(
-                    "edge" => Dict(
+        Dict(
+            "id" => gen(y).resource,
+            "edges" => Dict(
+                "edge" => merge!(
+                    Dict(
                         "end_vertex" => "elec_" * gen(y).region,
                         "commodity" => "Electricity",
                         "constraints" => constraints_dict,
                         "availability" => gen_availability,
-                        "can_retire" => in(y,inputs["RET_CAP"]),
-                        "can_expand" => in(y,inputs["NEW_CAP"]),
+                        "can_retire" => in(y, inputs["RET_CAP"]),
+                        "can_expand" => in(y, inputs["NEW_CAP"]),
                         "capacity_size" => 1.0,
                         "existing_capacity" => gen(y).existing_cap_mw,
                         "fixed_om_cost" => gen(y).fixed_om_cost_per_mwyr,
@@ -158,11 +161,15 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
                         "min_capacity" => 0,
                         "variable_om_cost" => 0,
                         "wacc" => wacc,
-                        "capital_recovery_period" => crp,
-                    )
+                        "capital_recovery_period" => crp
+                    ),
+                    speed_limits  # Merge the speed_limits dictionary here
                 )
             )
         )
+    )
+
+        
     end
 
     open(joinpath(macro_case,string("assets/assets_",stage_number,"/vre.json")), "w") do io

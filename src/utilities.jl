@@ -122,3 +122,35 @@ function get_wacc_and_crp(resource::AbstractString, genx_stage_path::AbstractStr
     return wacc, crp
 
 end
+
+function get_speed_limits(resource::AbstractString, genx_stage_path::AbstractString)
+
+    folder = dirname(genx_stage_path)
+
+    df_speed_limits = CSV.read(string(folder,"/speed_limits.csv"), DataFrame)
+
+    # Filter the DataFrame for the specific resource
+    filtered_row = filter(row -> row[1] == resource, df_speed_limits)
+    
+    if nrow(filtered_row) == 0
+        error("Resource $resource not found in speed_limits.csv")
+    end
+
+    # Col number of main data
+    col = findfirst(==("cumulative_external_capacity_1"), names(df_speed_limits)) - 1
+
+    # Convert the row to a dictionary, excluding the first column
+    speed_limits_dict = Dict(col => filtered_row[1, col] for col in names(df_speed_limits)[2:col])
+
+    # Add external capacity of the specific stage
+    stage_number = get_stage_number(genx_stage_path)
+
+    col = string("cumulative_external_capacity_",stage_number)
+    
+    external_capacity_of_stage = Dict("cumulative_external_capacity" => filtered_row[1, col])
+
+    final_dict = merge(speed_limits_dict, external_capacity_of_stage)
+    
+    return final_dict
+
+end

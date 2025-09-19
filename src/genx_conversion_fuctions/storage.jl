@@ -273,11 +273,15 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
 
         # Get multi stage inputs investment inputs
         wacc, crp = get_wacc_and_crp(gen(y).resource, genx_stage_path)
+
+        # Get speed limits
+        speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
         
         push!(storage["elec_stor"]["instance_data"],
             Dict(
                 "id" =>  gen(y).resource,
-                "storage"=> Dict(
+                "storage"=> merge!(
+                    Dict(
                     "can_expand" => in(y,inputs["NEW_CAP_ENERGY"]),
                     "capacity_size" => 1.0,
                     "can_retire" => in(y,inputs["RET_CAP_ENERGY"]),
@@ -296,9 +300,11 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                     "min_storage_level" => 0.0,
                     "wacc" => wacc,
                     "capital_recovery_period" => crp
+                ), speed_limits  # Merge the speed_limits dictionary here
                 ),
                 "edges"=> Dict(
-                    "discharge_edge" => Dict(
+                    "discharge_edge" => merge!(
+                        Dict(
                         "end_vertex" => "elec_" * gen(y).region,
                         "can_expand" => in(y,inputs["NEW_CAP"]),
                         "can_retire" => in(y,inputs["RET_CAP"]),
@@ -314,6 +320,7 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                         "variable_om_cost" => gen(y).var_om_cost_per_mwh,
                         "wacc" => wacc,
                         "capital_recovery_period" => crp
+                    ), speed_limits  # Merge the speed_limits dictionary here
                     ),
                     "charge_edge" => Dict(
                         "start_vertex" => "elec_" * gen(y).region,
