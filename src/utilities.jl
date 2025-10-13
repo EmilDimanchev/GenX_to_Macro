@@ -115,11 +115,12 @@ end
 function get_wacc_and_crp(resource::AbstractString, genx_stage_path::AbstractString)
 
     df_inv_input = CSV.read(string(genx_stage_path,"/resources/Resource_multistage_data.csv"), DataFrame)
-    df_inv = select(df_inv_input, [:Resource, :WACC, :Capital_Recovery_Period])
+    df_inv = select(df_inv_input, [:Resource, :WACC, :Capital_Recovery_Period, :Lifetime])
     wacc = filter(row -> row.Resource == resource, df_inv).WACC[1]
     crp = filter(row -> row.Resource == resource, df_inv).Capital_Recovery_Period[1]
+    lifetime = filter(row -> row.Resource == resource, df_inv).Lifetime[1]
 
-    return wacc, crp
+    return wacc, crp, lifetime
 
 end
 
