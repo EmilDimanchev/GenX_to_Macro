@@ -91,6 +91,13 @@ function make_transmission_json(inputs::Dict, macro_case::AbstractString, genx_s
         # Get speed limits
         speed_limits = get_speed_limits(start_region*"_to_"*end_region, genx_stage_path)
 
+        transmission_constraints = Dict(
+            "CapacityConstraint" => true,
+            "MaxCapacityConstraint" => true,
+            "MaxCapacityGrowthConstraint" => true,
+            "DevelopmentConstraint" => true
+        )
+
         push!(transmission["transmission"]["instance_data"],
             Dict(
                "id" => start_region*"_to_"*end_region,
@@ -101,10 +108,7 @@ function make_transmission_json(inputs::Dict, macro_case::AbstractString, genx_s
                     "end_vertex" => "elec_"*end_region,
                     "can_expand" => in(l,inputs["EXPANSION_LINES"]),
                     "can_retire" => false,
-                    "constraints" => Dict(
-                            "CapacityConstraint" => true,
-                            "MaxCapacityConstraint" => true
-                    ),
+                    "constraints" => transmission_constraints,
                     "existing_capacity" => inputs["pTrans_Max"][l],
                     "max_capacity" => inputs["pTrans_Max"][l] + inputs["pMax_Line_Reinforcement"][l],
                     "annualized_investment_cost" => inputs["pC_Line_Reinforcement"][l],

@@ -211,7 +211,12 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
 
         wacc, crp = get_wacc_and_crp(gen(y).resource, genx_stage_path)
         
-        speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
+        speed_limits = Dict()
+        if in(y,inputs["NEW_CAP"])
+            speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
+            constraints_dict["MaxCapacityGrowthConstraint"] = true
+            constraints_dict["DevelopmentConstraint"] = true
+        end
         
         push!(thermal["ThermalPower"]["instance_data"],
             Dict(

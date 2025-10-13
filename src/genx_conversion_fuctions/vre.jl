@@ -139,7 +139,12 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
 
         wacc, crp = get_wacc_and_crp(gen(y).resource, genx_stage_path)
 
-        speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
+        speed_limits = Dict()
+        if in(y,inputs["NEW_CAP"])
+            speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
+            constraints_dict["MaxCapacityGrowthConstraint"] = true
+            constraints_dict["DevelopmentConstraint"] = true
+        end
 
         push!(vre["VRE"]["instance_data"],
         Dict(

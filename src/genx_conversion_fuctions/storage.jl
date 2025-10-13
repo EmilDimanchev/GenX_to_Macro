@@ -275,7 +275,14 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
         wacc, crp = get_wacc_and_crp(gen(y).resource, genx_stage_path)
 
         # Get speed limits
-        speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
+        speed_limits = Dict()
+        if in(y,inputs["NEW_CAP"])
+            speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
+            storage_constraints_dict["MaxCapacityGrowthConstraint"] = true
+            storage_constraints_dict["DevelopmentConstraint"] = true
+            discharge_constraints_dict["MaxCapacityGrowthConstraint"] = true
+            discharge_constraints_dict["DevelopmentConstraint"] = true
+        end
         
         push!(storage["elec_stor"]["instance_data"],
             Dict(
