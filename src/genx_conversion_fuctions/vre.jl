@@ -137,7 +137,7 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
             constraints_dict["MaxCapacityConstraint"] = true
         end
 
-        wacc, crp = get_wacc_and_crp(gen(y).resource, genx_stage_path)
+        wacc, crp, lifetime, min_ret_cap = get_wacc_and_crp(gen(y).resource, genx_stage_path)
 
         speed_limits = Dict()
         if in(y,inputs["NEW_CAP"])
@@ -166,7 +166,9 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
                         "min_capacity" => 0,
                         "variable_om_cost" => 0,
                         "wacc" => wacc,
-                        "capital_recovery_period" => crp
+                        "capital_recovery_period" => crp, 
+                        "lifetime" => lifetime,
+                        "min_retired_capacity" => min_ret_cap
                     ),
                     speed_limits  # Merge the speed_limits dictionary here
                 )

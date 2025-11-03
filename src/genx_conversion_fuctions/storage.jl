@@ -272,7 +272,7 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
         end
 
         # Get multi stage inputs investment inputs
-        wacc, crp = get_wacc_and_crp(gen(y).resource, genx_stage_path)
+        wacc, crp, lifetime, min_ret_cap = get_wacc_and_crp(gen(y).resource, genx_stage_path)
 
         # Get speed limits
         speed_limits = Dict()
@@ -306,7 +306,8 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                     "min_duration" => gen(y).min_duration,
                     "min_storage_level" => 0.0,
                     "wacc" => wacc,
-                    "capital_recovery_period" => crp
+                    "capital_recovery_period" => crp, 
+                    "lifetime" => lifetime
                 ), speed_limits  # Merge the speed_limits dictionary here
                 ),
                 "edges"=> Dict(
@@ -326,7 +327,9 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                         "min_capacity" => 0,
                         "variable_om_cost" => gen(y).var_om_cost_per_mwh,
                         "wacc" => wacc,
-                        "capital_recovery_period" => crp
+                        "capital_recovery_period" => crp, 
+                        "lifetime" => lifetime,
+                        "min_retired_capacity" => min_ret_cap
                     ), speed_limits  # Merge the speed_limits dictionary here
                     ),
                     "charge_edge" => Dict(
@@ -344,7 +347,8 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                         "min_capacity" => gen(y).min_charge_cap_mw,
                         "variable_om_cost" => gen(y).var_om_cost_per_mwh_in,
                         "wacc" => wacc,
-                        "capital_recovery_period" => crp
+                        "capital_recovery_period" => crp, 
+                        "lifetime" => lifetime
                     ),
                 )
             )

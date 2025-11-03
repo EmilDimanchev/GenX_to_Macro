@@ -90,7 +90,7 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
         "global_data"=> Dict("time_interval" => "CO2"),
         "instance_data" => [
             Dict("id" => "co2_sink_$cap",
-                "constraints" => Dict("CO2CapConstraint" => true),
+                "constraints" => Dict("CO2CapConstraint" => false),
                 "rhs_policy" => Dict("CO2CapConstraint" => sum(inputs["dfMaxCO2"][z, cap]
                 for z in findall(x -> x == 1, inputs["dfCO2CapZones"][:, cap])))
             )
@@ -232,7 +232,17 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
         "instance_data" => [
             Dict("id" => "co2_sink_nothing",
                 "constraints" => Dict("CO2CapConstraint" => false),
-                "rhs_policy" => Dict("CO2CapConstraint" => 0)
+                "rhs_policy" => Dict("CO2CapConstraint" => 0.0)
+            )
+        ]
+        )
+    )
+
+    push!(nodes["nodes"], Dict(
+        "type" => "CO2Captured",
+        "global_data"=> Dict("time_interval" => "CO2Captured"),
+        "instance_data" => [
+            Dict("id" => "co2_sink_injection"
             )
         ]
         )

@@ -119,8 +119,9 @@ function get_wacc_and_crp(resource::AbstractString, genx_stage_path::AbstractStr
     wacc = filter(row -> row.Resource == resource, df_inv).WACC[1]
     crp = filter(row -> row.Resource == resource, df_inv).Capital_Recovery_Period[1]
     lifetime = filter(row -> row.Resource == resource, df_inv).Lifetime[1]
+    min_ret_cap = filter(row -> row.Resource == resource, df_inv_input).Min_Retired_Cap_MW[1]
 
-    return wacc, crp, lifetime
+    return wacc, crp, lifetime, min_ret_cap
 
 end
 
@@ -139,6 +140,7 @@ function get_speed_limits(resource::AbstractString, genx_stage_path::AbstractStr
 
     # Col number of main data
     col = findfirst(==("cumulative_external_capacity_1"), names(df_speed_limits)) - 1
+    col_max = findfirst(==("max_cumul_capacity_1"), names(df_speed_limits)) - 1
 
     # Convert the row to a dictionary, excluding the first column
     speed_limits_dict = Dict(col => filtered_row[1, col] for col in names(df_speed_limits)[2:col])
@@ -147,10 +149,12 @@ function get_speed_limits(resource::AbstractString, genx_stage_path::AbstractStr
     stage_number = get_stage_number(genx_stage_path)
 
     col = string("cumulative_external_capacity_",stage_number)
+    col_max = string("max_cumul_capacity_",stage_number)
     
     external_capacity_of_stage = Dict("cumulative_external_capacity" => filtered_row[1, col])
+    max_capacity_of_stage = Dict("max_cumul_capacity" => filtered_row[1, col_max])
 
-    final_dict = merge(speed_limits_dict, external_capacity_of_stage)
+    final_dict = merge(speed_limits_dict, external_capacity_of_stage, max_capacity_of_stage)
     
     return final_dict
 
