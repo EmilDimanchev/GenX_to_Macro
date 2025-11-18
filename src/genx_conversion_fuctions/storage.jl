@@ -272,7 +272,7 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
         end
 
         # Get multi stage inputs investment inputs
-        wacc, crp, lifetime, min_ret_cap = get_wacc_and_crp(gen(y).resource, genx_stage_path)
+        wacc, crp, lifetime, min_ret_cap = get_multistage_params(gen(y).resource, genx_stage_path)
 
         # Get speed limits
         speed_limits = Dict()

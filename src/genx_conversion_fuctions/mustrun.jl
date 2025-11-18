@@ -139,7 +139,7 @@ function make_mustrun_json(inputs::Dict, macro_case::AbstractString, genx_stage_
         #     constraints_dict["MaxCapacityConstraint"] = true
         # end
 
-        wacc, crp, lifetime, min_ret_cap = get_wacc_and_crp(gen(y).resource, genx_stage_path)
+        wacc, crp, lifetime, min_ret_cap = get_multistage_params(gen(y).resource, genx_stage_path)
 
         # Get speed limits
         speed_limits = Dict()

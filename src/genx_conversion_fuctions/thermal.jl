@@ -210,7 +210,7 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
         # co2cap = findfirst(inputs["dfCO2CapZones"][gen(y).zone,:].==1)
         co2cap = "co2_sink_nothing"
 
-        wacc, crp, lifetime, min_ret_cap = get_wacc_and_crp(gen(y).resource, genx_stage_path)
+        wacc, crp, lifetime, min_ret_cap = get_multistage_params(gen(y).resource, genx_stage_path)
 
         speed_limits = Dict()
         if in(y, inputs["NEW_CAP"])
@@ -376,7 +376,7 @@ function make_thermal_ccs_json(inputs::Dict, macro_case::AbstractString, genx_st
 
 
 
-        wacc, crp, lifetime = get_wacc_and_crp(gen(y).resource, genx_stage_path)
+        wacc, crp, lifetime = get_multistage_params(gen(y).resource, genx_stage_path)
 
         speed_limits = Dict()
         if in(y, inputs["NEW_CAP"])
