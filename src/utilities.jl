@@ -116,10 +116,16 @@ function get_multistage_params(resource::AbstractString, genx_stage_path::Abstra
 
     df_inv_input = CSV.read(string(genx_stage_path,"/resources/Resource_multistage_data.csv"), DataFrame)
     df_inv = select(df_inv_input, [:Resource, :WACC, :Capital_Recovery_Period, :Lifetime])
-    wacc = filter(row -> row.Resource == resource, df_inv).WACC[1]
-    crp = filter(row -> row.Resource == resource, df_inv).Capital_Recovery_Period[1]
-    lifetime = filter(row -> row.Resource == resource, df_inv).Lifetime[1]
-    min_ret_cap = filter(row -> row.Resource == resource, df_inv_input).Min_Retired_Cap_MW[1]
+    
+    wacc_vec = filter(row -> row.Resource == resource, df_inv).WACC
+    crp_vec = filter(row -> row.Resource == resource, df_inv).Capital_Recovery_Period
+    lifetime_vec = filter(row -> row.Resource == resource, df_inv).Lifetime
+    min_ret_cap_vec = filter(row -> row.Resource == resource, df_inv_input).Min_Retired_Cap_MW
+    
+    wacc = isempty(wacc_vec) ? missing : wacc_vec[1]
+    crp = isempty(crp_vec) ? missing : crp_vec[1]
+    lifetime = isempty(lifetime_vec) ? missing : lifetime_vec[1]
+    min_ret_cap = isempty(min_ret_cap_vec) ? missing : min_ret_cap_vec[1]
 
     return wacc, crp, lifetime, min_ret_cap
 
@@ -135,7 +141,8 @@ function get_speed_limits(resource::AbstractString, genx_stage_path::AbstractStr
     filtered_row = filter(row -> row[1] == resource, df_speed_limits)
     
     if nrow(filtered_row) == 0
-        error("Resource $resource not found in speed_limits.csv")
+        @warn "Resource $resource not found in speed_limits.csv"
+        return Dict()  # Return an empty dictionary
     end
 
     # Col number of main data

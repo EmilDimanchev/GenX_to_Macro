@@ -14,7 +14,7 @@ macro_case_path = joinpath(genx_case_path,output_case)
 make_macro_dir(macro_case_path, stage_folders)
 
 # Depending on case, may need to add/remove commodities
-commodities_vec = ["Electricity", "NaturalGas", "CO2", "Uranium", "Coal"]
+commodities_vec = ["Electricity", "NaturalGas", "CO2", "Uranium", "Coal", "CO2Captured"]
 
 for case_folder in stage_folders
 

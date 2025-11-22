@@ -164,7 +164,7 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
 end
 
 # ~~~
-# Multistage
+# MARK: Multistage
 # ~~~
 
 function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString, genx_stage_path::AbstractString)

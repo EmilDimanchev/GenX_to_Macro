@@ -83,7 +83,7 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString)
 end
 
 # ~~~
-# Multistage
+# MARK: Multistage
 # ~~~
 
 function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path::AbstractString)
@@ -160,8 +160,8 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
                         "can_expand" => in(y, inputs["NEW_CAP"]),
                         "capacity_size" => 1.0,
                         "existing_capacity" => gen(y).existing_cap_mw,
-                        "fixed_om_cost" => gen(y).fixed_om_cost_per_mwyr,
-                        "annualized_investment_cost" => gen(y).inv_cost_per_mwyr,
+                        "fixed_om_cost" => round(gen(y).fixed_om_cost_per_mwyr, digits=1),
+                        "annualized_investment_cost" => round(gen(y).inv_cost_per_mwyr, digits=0),
                         "max_capacity" => gen(y).max_cap_mw,
                         "min_capacity" => 0,
                         "variable_om_cost" => 0,

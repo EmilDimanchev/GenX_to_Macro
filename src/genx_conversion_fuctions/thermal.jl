@@ -129,7 +129,7 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString)
 end
 
 # ~~~
-# Multistage
+# MARK: Multistage
 # ~~~
 
 function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_path::AbstractString)
@@ -224,8 +224,8 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
                 "id" => gen(y).resource,
                 "transforms" => Dict(
                     "timedata" => fuel_type,
-                    "emission_rate" => inputs["fuel_CO2"][gen(y).fuel] / conv_mmbtu_to_mwh,
-                    "fuel_consumption" => conv_mmbtu_to_mwh * gen(y).heat_rate_mmbtu_per_mwh
+                    "emission_rate" => round(inputs["fuel_CO2"][gen(y).fuel] / conv_mmbtu_to_mwh, digits = 2),
+                    "fuel_consumption" => round(conv_mmbtu_to_mwh * gen(y).heat_rate_mmbtu_per_mwh, digits = 2),
                 ),
                 "edges" => Dict(
                     "elec_edge" => merge!(
@@ -250,7 +250,7 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
                             "min_down_time" => gen(y).down_time,
                             "min_up_time" => gen(y).up_time,
                             "startup_cost" => gen(y).start_cost_per_mw,
-                            "startup_fuel_consumption" => conv_mmbtu_to_mwh * gen(y).start_fuel_mmbtu_per_mw,
+                            "startup_fuel_consumption" => round(conv_mmbtu_to_mwh * gen(y).start_fuel_mmbtu_per_mw, digits=2),
                             "wacc" => wacc,
                             "capital_recovery_period" => crp,
                             "lifetime" => lifetime,
@@ -283,7 +283,7 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
 end
 
 # ~~~
-# CCS Thermal
+# MARK: CCS Thermal
 # ~~~
 
 function make_thermal_ccs_json(inputs::Dict, macro_case::AbstractString, genx_stage_path::AbstractString)
@@ -390,9 +390,9 @@ function make_thermal_ccs_json(inputs::Dict, macro_case::AbstractString, genx_st
                 "id" => gen(y).resource,
                 "transforms" => Dict(
                     "timedata" => fuel_type,
-                    "emission_rate" => (1 - gen(y).co2_capture_fraction) * inputs["fuel_CO2"][gen(y).fuel] / conv_mmbtu_to_mwh,
-                    "fuel_consumption" => conv_mmbtu_to_mwh * gen(y).heat_rate_mmbtu_per_mwh,
-                    "capture_rate" => gen(y).co2_capture_fraction * inputs["fuel_CO2"][gen(y).fuel] / conv_mmbtu_to_mwh
+                    "emission_rate" => round((1 - gen(y).co2_capture_fraction) * inputs["fuel_CO2"][gen(y).fuel] / conv_mmbtu_to_mwh, digits=2),
+                    "fuel_consumption" => round(conv_mmbtu_to_mwh * gen(y).heat_rate_mmbtu_per_mwh, digits=2),
+                    "capture_rate" => round(gen(y).co2_capture_fraction * inputs["fuel_CO2"][gen(y).fuel] / conv_mmbtu_to_mwh, digits=2)
                 ),
                 "edges" => Dict(
                     "elec_edge" => merge!(
@@ -417,7 +417,7 @@ function make_thermal_ccs_json(inputs::Dict, macro_case::AbstractString, genx_st
                             "min_down_time" => gen(y).down_time,
                             "min_up_time" => gen(y).up_time,
                             "startup_cost" => gen(y).start_cost_per_mw,
-                            "startup_fuel_consumption" => conv_mmbtu_to_mwh * gen(y).start_fuel_mmbtu_per_mw,
+                            "startup_fuel_consumption" => round(conv_mmbtu_to_mwh * gen(y).start_fuel_mmbtu_per_mw, digits=2),
                             "wacc" => wacc,
                             "capital_recovery_period" => crp,
                             "lifetime" => lifetime

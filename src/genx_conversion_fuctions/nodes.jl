@@ -117,7 +117,7 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
 end
 
 # ~~~
-# Multistage
+# MARK: Multistage
 # ~~~
 
 
