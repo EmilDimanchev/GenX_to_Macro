@@ -61,11 +61,11 @@ function make_mustrun_json(inputs::Dict, macro_case::AbstractString)
                         "can_expand" => in(y,inputs["NEW_CAP"]),
                         "capacity_size" => 1.0, ### Note: GenX internally assumes capacity_size = 1.0 for must run generators
                         "existing_capacity" => gen(y).existing_cap_mw,
-                        "fixed_om_cost" => gen(y).fixed_om_cost_per_mwyr,
-                        "annualized_investment_cost" => gen(y).inv_cost_per_mwyr,
+                        "fixed_om_cost" => gen(y).fixed_om_cost_per_mwyr/1e3,
+                        "annualized_investment_cost" => gen(y).inv_cost_per_mwyr/1e3,
                         "max_capacity" => gen(y).max_cap_mw,
                         "min_capacity" => gen(y).min_cap_mw,
-                        "variable_om_cost" => gen(y).var_om_cost_per_mwh,
+                        "variable_om_cost" => gen(y).var_om_cost_per_mwh/1e3,
                     )
                 )
             )
@@ -163,7 +163,7 @@ function make_mustrun_json(inputs::Dict, macro_case::AbstractString, genx_stage_
                         "can_expand" => in(y,inputs["NEW_CAP"]),
                         "capacity_size" => 1.0, ### Note: GenX internally assumes capacity_size = 1.0 for must run generators
                         "existing_capacity" => gen(y).existing_cap_mw,
-                        "fixed_om_cost" => round(gen(y).fixed_om_cost_per_mwyr, digits=1),
+                        "fixed_om_cost" => round(gen(y).fixed_om_cost_per_mwyr, digits=1)/1e3,
                         "annualized_investment_cost" => 0,
                         "max_capacity" => 1e6,
                         "min_capacity" => 0,
