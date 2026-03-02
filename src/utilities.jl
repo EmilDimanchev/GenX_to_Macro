@@ -146,7 +146,7 @@ function get_speed_limits(resource::AbstractString, genx_stage_path::AbstractStr
     end
 
     # Col number of main data
-    col = findfirst(==("cumulative_external_capacity_1"), names(df_speed_limits)) - 1
+    col = findfirst(==("init_cumul_capacity_1"), names(df_speed_limits)) - 1
     col_max = findfirst(==("max_cumul_capacity_1"), names(df_speed_limits)) - 1
 
     # Convert the row to a dictionary, excluding the first column
@@ -155,14 +155,173 @@ function get_speed_limits(resource::AbstractString, genx_stage_path::AbstractStr
     # Add external capacity of the specific stage
     stage_number = get_stage_number(genx_stage_path)
 
-    col = string("cumulative_external_capacity_",stage_number)
+    col = string("init_cumul_capacity_",stage_number)
     col_max = string("max_cumul_capacity_",stage_number)
     
-    external_capacity_of_stage = Dict("cumulative_external_capacity" => filtered_row[1, col])
+    external_capacity_of_stage = Dict("init_cumul_capacity" => filtered_row[1, col])
     max_capacity_of_stage = Dict("max_cumul_capacity" => filtered_row[1, col_max])
 
     final_dict = merge(speed_limits_dict, external_capacity_of_stage, max_capacity_of_stage)
     
     return final_dict
 
+end
+
+function get_capacity_reserve_margin_params(resource::AbstractString, genx_stage_path::AbstractString)
+    """
+    Get capacity reserve margin derating factor and ID for a resource.
+    
+    Maps the first two characters of the resource name (state code) to a zone number,
+    then retrieves the derating factor for that zone from the Resource_capacity_reserve_margin.csv file.
+    
+    Returns a Dict with:
+    - "capacity_reserve_margin_derate_factor": the derating factor for the resource's zone
+    - "capacity_reserve_margin_id": the zone number as an integer
+    
+    Returns an empty Dict if the resource is not found or if there's no matching derating factor.
+    """
+    
+    # State to zone mapping
+    STATE_TO_ZONE = Dict(
+        "WA" => 10,
+        "CA" => 2,
+        "NV" => 7,
+        "ID" => 4,
+        "MT" => 5,
+        "WY" => 11,
+        "UT" => 9,
+        "AZ" => 1,
+        "OR" => 8,
+        "CO" => 3,
+        "NM" => 6
+    )
+    
+    # Extract state code (first 2 characters)
+    if length(resource) < 2
+        @warn "Resource name '$resource' is too short to extract state code"
+        return Dict()
+    end
+    
+    state_code = uppercase(resource[1:2])
+    
+    # Get zone number
+    if !haskey(STATE_TO_ZONE, state_code)
+        @warn "State code '$state_code' from resource '$resource' not found in mapping"
+        return Dict()
+    end
+    
+    zone_number = STATE_TO_ZONE[state_code]
+    
+    # Read the capacity reserve margin CSV file
+    crm_file_path = string(genx_stage_path, "/resources/policy_assignments/Resource_capacity_reserve_margin.csv")
+    
+    if !isfile(crm_file_path)
+        @warn "Capacity reserve margin file not found: $crm_file_path"
+        return Dict()
+    end
+    
+    df_crm = CSV.read(crm_file_path, DataFrame)
+    
+    # Filter for the specific resource
+    filtered_row = filter(row -> row.Resource == resource, df_crm)
+    
+    if nrow(filtered_row) == 0
+        @warn "Resource $resource not found in Resource_capacity_reserve_margin.csv"
+        return Dict()
+    end
+    
+    # Get the derating factor for the zone
+    derating_col = string("Derating_factor_", zone_number)
+    
+    if !hasproperty(df_crm, Symbol(derating_col))
+        @warn "Column '$derating_col' not found in Resource_capacity_reserve_margin.csv"
+        return Dict()
+    end
+    
+    derating_factor = filtered_row[1, Symbol(derating_col)]
+    
+    # Return the parameters as a dictionary
+    return Dict(
+        "capacity_reserve_margin_derate_factor" => derating_factor,
+        "capacity_reserve_margin_id" => state_code
+    )
+end
+
+function get_state_code_from_zone(zone_number::Int)
+    """
+    Get the two-letter state code corresponding to a zone number.
+    
+    Returns the state code as a string, or an empty string if zone not found.
+    """
+    
+    ZONE_TO_STATE = Dict(
+        1 => "AZ",
+        2 => "CA",
+        3 => "CO",
+        4 => "ID",
+        5 => "MT",
+        6 => "NM",
+        7 => "NV",
+        8 => "OR",
+        9 => "UT",
+        10 => "WA",
+        11 => "WY"
+    )
+    
+    return get(ZONE_TO_STATE, zone_number, "")
+end
+
+function get_capacity_reserve_margin_value(zone_number::Int, genx_stage_path::AbstractString)
+    """
+    Get the capacity reserve margin value for a given zone from the Capacity_reserve_margin.csv file.
+    
+    Reads the CSV file and finds the non-zero value in the CapRes columns for the specified zone.
+    Returns the non-zero value, or 0.0 if no non-zero value is found or if there's an error.
+    
+    Parameters:
+    - zone_number: The zone number (1-11)
+    - genx_stage_path: Path to the stage input folder
+    
+    Returns:
+    - Float64: The capacity reserve margin value
+    """
+    
+    # Construct the path to the Capacity_reserve_margin.csv file
+    crm_file_path = string(genx_stage_path, "/policies/Capacity_reserve_margin.csv")
+    
+    if !isfile(crm_file_path)
+        @warn "Capacity reserve margin file not found: $crm_file_path"
+        return 0.0
+    end
+    
+    # Read the CSV file
+    df_crm = CSV.read(crm_file_path, DataFrame)
+    
+    # Find the row for this zone (format is "z1", "z2", etc.)
+    zone_str = string("z", zone_number)
+    filtered_row = filter(row -> row.Network_zones == zone_str, df_crm)
+    
+    if nrow(filtered_row) == 0
+        @warn "Zone $zone_str not found in Capacity_reserve_margin.csv"
+        return 0.0
+    end
+    
+    # Get all CapRes columns
+    capres_cols = filter(name -> startswith(string(name), "CapRes_"), names(df_crm))
+    
+    if isempty(capres_cols)
+        @warn "No CapRes columns found in Capacity_reserve_margin.csv"
+        return 0.0
+    end
+    
+    # Find the first non-zero value
+    for col in capres_cols
+        value = filtered_row[1, col]
+        if value != 0.0
+            return value
+        end
+    end
+    
+    # If all values are zero, return 0.0
+    return 0.0
 end

@@ -213,11 +213,15 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
         wacc, crp, lifetime, min_ret_cap = get_multistage_params(gen(y).resource, genx_stage_path)
 
         speed_limits = Dict()
+        crm_params = Dict()
         if in(y, inputs["NEW_CAP"])
             speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
             constraints_dict["MaxCapacityGrowthConstraint"] = true
             constraints_dict["DevelopmentConstraint"] = true
         end
+        
+        # Get capacity reserve margin parameters
+        crm_params = get_capacity_reserve_margin_params(gen(y).resource, genx_stage_path)
 
         push!(thermal["ThermalPower"]["instance_data"],
             Dict(
@@ -255,7 +259,9 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
                             "capital_recovery_period" => crp,
                             "lifetime" => lifetime,
                             "min_retired_capacity" => min_ret_cap
-                        ), speed_limits  # Merge the speed_limits dictionary here
+                        ), 
+                        speed_limits,  # Merge the speed_limits dictionary here
+                        crm_params     # Merge the capacity reserve margin parameters
                     ),
                     "fuel_edge" => Dict(
                         "commodity" => fuel_type,
@@ -379,11 +385,15 @@ function make_thermal_ccs_json(inputs::Dict, macro_case::AbstractString, genx_st
         wacc, crp, lifetime = get_multistage_params(gen(y).resource, genx_stage_path)
 
         speed_limits = Dict()
+        crm_params = Dict()
         if in(y, inputs["NEW_CAP"])
             speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
             constraints_dict["MaxCapacityGrowthConstraint"] = true
             constraints_dict["DevelopmentConstraint"] = true
         end
+        
+        # Get capacity reserve margin parameters
+        crm_params = get_capacity_reserve_margin_params(gen(y).resource, genx_stage_path)
 
         push!(thermal["ThermalPowerCCS"]["instance_data"],
             Dict(
@@ -421,7 +431,9 @@ function make_thermal_ccs_json(inputs::Dict, macro_case::AbstractString, genx_st
                             "wacc" => wacc,
                             "capital_recovery_period" => crp,
                             "lifetime" => lifetime
-                        ), speed_limits  # Merge the speed_limits dictionary here
+                        ), 
+                        speed_limits,  # Merge the speed_limits dictionary here
+                        crm_params     # Merge the capacity reserve margin parameters
                     ),
                     "fuel_edge" => Dict(
                         "commodity" => fuel_type,

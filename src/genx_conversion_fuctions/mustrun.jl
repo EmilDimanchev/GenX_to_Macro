@@ -143,11 +143,15 @@ function make_mustrun_json(inputs::Dict, macro_case::AbstractString, genx_stage_
 
         # Get speed limits
         speed_limits = Dict()
+        crm_params = Dict()
         if in(y,inputs["NEW_CAP"])
             speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
             constraints_dict["MaxCapacityGrowthConstraint"] = true
             constraints_dict["DevelopmentConstraint"] = true
         end
+        
+        # Get capacity reserve margin parameters
+        crm_params = get_capacity_reserve_margin_params(gen(y).resource, genx_stage_path)
 
         push!(mustrun["MustRun"]["instance_data"],
             Dict(
@@ -172,7 +176,9 @@ function make_mustrun_json(inputs::Dict, macro_case::AbstractString, genx_stage_
                         "capital_recovery_period" => crp,
                         "lifetime" => lifetime,
                         "min_retired_capacity" => min_ret_cap
-                    ),  speed_limits  # Merge the speed_limits dictionary here
+                    ),  
+                    speed_limits,  # Merge the speed_limits dictionary here
+                    crm_params     # Merge the capacity reserve margin parameters
                     )
                 )
             )

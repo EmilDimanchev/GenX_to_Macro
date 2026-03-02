@@ -17,8 +17,10 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
 
     for z in 1:inputs["Z"]
         z_name = gen[findfirst(g.zone==z for g in gen)].region;
+        state_code = get_state_code_from_zone(z)
         node_instance = Dict(
             "id" => "elec_"*z_name,
+            "capacity_reserve_margin_id" => state_code,
             "demand" => Dict("timeseries" => Dict("path" => "system/demand.csv",
                                                 "header" => "elec_demand_"*z_name))
         )
@@ -143,8 +145,12 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
 
     for z in 1:inputs["Z"]
         z_name = gen[findfirst(g.zone==z for g in gen)].region;
+        state_code = get_state_code_from_zone(z)
+        crm_value = get_capacity_reserve_margin_value(z, genx_stage_path)
         node_instance = Dict(
             "id" => "elec_"*z_name,
+            "capacity_reserve_margin_id" => state_code,
+            "capacity_reserve_margin" => crm_value,
             "demand" => Dict("timeseries" => Dict("path" => string("system/demand_",stage_number,".csv"),
                                                 "header" => "elec_demand_"*z_name))
         )
