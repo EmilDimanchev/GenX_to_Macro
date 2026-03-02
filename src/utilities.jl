@@ -172,11 +172,12 @@ function get_capacity_reserve_margin_params(resource::AbstractString, genx_stage
     Get capacity reserve margin derating factor and ID for a resource.
     
     Maps the first two characters of the resource name (state code) to a zone number,
-    then retrieves the derating factor for that zone from the Resource_capacity_reserve_margin.csv file.
+    then determines which CapRes constraint the zone participates in from Capacity_reserve_margin.csv,
+    and retrieves the derating factor for that constraint from Resource_capacity_reserve_margin.csv.
     
     Returns a Dict with:
-    - "capacity_reserve_margin_derate_factor": the derating factor for the resource's zone
-    - "capacity_reserve_margin_id": the zone number as an integer
+    - "capacity_reserve_margin_derate_factor": the derating factor for the resource's CapRes constraint
+    - "capacity_reserve_margin_id": the state code
     
     Returns an empty Dict if the resource is not found or if there's no matching derating factor.
     """
@@ -212,11 +213,48 @@ function get_capacity_reserve_margin_params(resource::AbstractString, genx_stage
     
     zone_number = STATE_TO_ZONE[state_code]
     
-    # Read the capacity reserve margin CSV file
+    # First, read Capacity_reserve_margin.csv to find which CapRes constraint this zone participates in
+    cap_margin_file_path = string(genx_stage_path, "/policies/Capacity_reserve_margin.csv")
+    
+    if !isfile(cap_margin_file_path)
+        @warn "Capacity_reserve_margin.csv file not found: $cap_margin_file_path"
+        return Dict()
+    end
+    
+    df_cap_margin = CSV.read(cap_margin_file_path, DataFrame)
+    
+    # Find the row for this zone
+    zone_str = string("z", zone_number)
+    zone_row = filter(row -> row.Network_zones == zone_str, df_cap_margin)
+    
+    if nrow(zone_row) == 0
+        @warn "Zone $zone_str not found in Capacity_reserve_margin.csv"
+        return Dict()
+    end
+    
+    # Find which CapRes column has a non-zero value
+    capres_cols = filter(name -> startswith(string(name), "CapRes_"), names(df_cap_margin))
+    capres_number = nothing
+    
+    for col in capres_cols
+        value = zone_row[1, col]
+        if value != 0.0
+            # Extract the number from CapRes_X
+            capres_number = parse(Int, replace(string(col), "CapRes_" => ""))
+            break
+        end
+    end
+    
+    if capres_number === nothing
+        @warn "No non-zero CapRes value found for zone $zone_str in Capacity_reserve_margin.csv"
+        return Dict()
+    end
+    
+    # Now read Resource_capacity_reserve_margin.csv and get the derating factor for this CapRes
     crm_file_path = string(genx_stage_path, "/resources/policy_assignments/Resource_capacity_reserve_margin.csv")
     
     if !isfile(crm_file_path)
-        @warn "Capacity reserve margin file not found: $crm_file_path"
+        @warn "Resource_capacity_reserve_margin.csv file not found: $crm_file_path"
         return Dict()
     end
     
@@ -230,8 +268,8 @@ function get_capacity_reserve_margin_params(resource::AbstractString, genx_stage
         return Dict()
     end
     
-    # Get the derating factor for the zone
-    derating_col = string("Derating_factor_", zone_number)
+    # Get the derating factor for the CapRes constraint this zone participates in
+    derating_col = string("Derating_factor_", capres_number)
     
     if !hasproperty(df_crm, Symbol(derating_col))
         @warn "Column '$derating_col' not found in Resource_capacity_reserve_margin.csv"
