@@ -94,7 +94,7 @@ function make_transmission_json(inputs::Dict, macro_case::AbstractString, genx_s
         transmission_constraints = Dict(
             "CapacityConstraint" => true,
             "MaxCapacityConstraint" => true,
-            "MaxCapacityGrowthConstraint" => true,
+            "MaxCapacityGrowthConstraint" => false,
             "DevelopmentConstraint" => true
         )
 

@@ -219,6 +219,10 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
             constraints_dict["MaxCapacityGrowthConstraint"] = true
             constraints_dict["DevelopmentConstraint"] = true
         end
+
+        if occursin("uranium", gen(y).fuel)
+            constraints_dict["MaxCapacityGrowthConstraint"] = false
+        end
         
         # Get capacity reserve margin parameters
         crm_params = get_capacity_reserve_margin_params(gen(y).resource, genx_stage_path)
@@ -388,7 +392,7 @@ function make_thermal_ccs_json(inputs::Dict, macro_case::AbstractString, genx_st
         crm_params = Dict()
         if in(y, inputs["NEW_CAP"])
             speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
-            constraints_dict["MaxCapacityGrowthConstraint"] = true
+            constraints_dict["MaxCapacityGrowthConstraint"] = false
             constraints_dict["DevelopmentConstraint"] = true
         end
         

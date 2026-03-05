@@ -277,11 +277,30 @@ function get_capacity_reserve_margin_params(resource::AbstractString, genx_stage
     end
     
     derating_factor = filtered_row[1, Symbol(derating_col)]
-    
+
+    # Map state code to region id. Regions are named so that they contain
+    # the two-letter state codes for the states they include. We iterate
+    # through the region names and pick the first region that contains the
+    # state code as a substring. If no region contains the state code we
+    # fall back to the state code itself and emit a warning.
+    regions = ["OR_WA_ID_MT", "CA", "AZ_NV", "WY_CO_MT"]
+    region_id = nothing
+    for r in regions
+        if occursin(state_code, r)
+            region_id = r
+            break
+        end
+    end
+
+    if region_id === nothing
+        @warn "State code '$state_code' not found in predefined regions; using state code as capacity_reserve_margin_id"
+        region_id = state_code
+    end
+
     # Return the parameters as a dictionary
     return Dict(
         "capacity_reserve_margin_derate_factor" => derating_factor,
-        "capacity_reserve_margin_id" => state_code
+        "capacity_reserve_margin_id" => region_id
     )
 end
 
