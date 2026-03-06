@@ -106,14 +106,14 @@ function make_hydro_json(inputs::Dict, setup::Dict, macro_case::AbstractString)
                         "constraints" => discharge_constraints_dict,
                         "efficiency" => gen(y).eff_down,
                         "existing_capacity" => gen(y).existing_cap_mw,
-                        "fixed_om_cost" => gen(y).fixed_om_cost_per_mwyr/1e3,
+                        "fixed_om_cost" => gen(y).fixed_om_cost_per_mwyr,
                         # Rounded to 1 decimal place
-                        "annualized_investment_cost" => round(gen(y).inv_cost_per_mwyr/1e3, digits=1),
+                        "annualized_investment_cost" => round(gen(y).inv_cost_per_mwyr, digits=1),
                         "max_capacity" => gen(y).max_cap_mw,
                         "min_capacity" => gen(y).min_cap_mw,
                         "ramp_down_fraction" => gen(y).ramp_dn_percentage,
                         "ramp_up_fraction" => gen(y).ramp_up_percentage,
-                        "variable_om_cost" => gen(y).var_om_cost_per_mwh/1e3
+                        "variable_om_cost" => gen(y).var_om_cost_per_mwh
                     ),
                     "inflow_edge" => Dict(
                         "availability" => gen_availability,
@@ -281,7 +281,7 @@ function make_hydro_json(inputs::Dict, setup::Dict, macro_case::AbstractString, 
                             "constraints" => discharge_constraints_dict,
                             "efficiency" => gen(y).eff_down,
                             "existing_capacity" => gen(y).existing_cap_mw,
-                            "fixed_om_cost" => gen(y).fixed_om_cost_per_mwyr/1e3,
+                            "fixed_om_cost" => gen(y).fixed_om_cost_per_mwyr,
                             "annualized_investment_cost" => 0,
                             "max_capacity" => 1e6,
                             "min_capacity" => 0,

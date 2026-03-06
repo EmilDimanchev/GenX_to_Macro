@@ -182,7 +182,15 @@ function get_capacity_reserve_margin_params(resource::AbstractString, genx_stage
     Returns an empty Dict if the resource is not found or if there's no matching derating factor.
     """
     
-    # State to zone mapping
+    # Extract state code (first 2 characters) for region mapping
+    if length(resource) < 2
+        @warn "Resource name '$resource' is too short to extract state code"
+        return Dict()
+    end
+    
+    state_code = uppercase(resource[1:2])
+    
+    # Validate state code is in our mapping
     STATE_TO_ZONE = Dict(
         "WA" => 10,
         "CA" => 2,
@@ -196,61 +204,13 @@ function get_capacity_reserve_margin_params(resource::AbstractString, genx_stage
         "CO" => 3,
         "NM" => 6
     )
-    
-    # Extract state code (first 2 characters)
-    if length(resource) < 2
-        @warn "Resource name '$resource' is too short to extract state code"
-        return Dict()
-    end
-    
-    state_code = uppercase(resource[1:2])
-    
-    # Get zone number
     if !haskey(STATE_TO_ZONE, state_code)
         @warn "State code '$state_code' from resource '$resource' not found in mapping"
         return Dict()
     end
     
-    zone_number = STATE_TO_ZONE[state_code]
-    
-    # First, read Capacity_reserve_margin.csv to find which CapRes constraint this zone participates in
-    cap_margin_file_path = string(genx_stage_path, "/policies/Capacity_reserve_margin.csv")
-    
-    if !isfile(cap_margin_file_path)
-        @warn "Capacity_reserve_margin.csv file not found: $cap_margin_file_path"
-        return Dict()
-    end
-    
-    df_cap_margin = CSV.read(cap_margin_file_path, DataFrame)
-    
-    # Find the row for this zone
-    zone_str = string("z", zone_number)
-    zone_row = filter(row -> row.Network_zones == zone_str, df_cap_margin)
-    
-    if nrow(zone_row) == 0
-        @warn "Zone $zone_str not found in Capacity_reserve_margin.csv"
-        return Dict()
-    end
-    
-    # Find which CapRes column has a non-zero value
-    capres_cols = filter(name -> startswith(string(name), "CapRes_"), names(df_cap_margin))
-    capres_number = nothing
-    
-    for col in capres_cols
-        value = zone_row[1, col]
-        if value != 0.0
-            # Extract the number from CapRes_X
-            capres_number = parse(Int, replace(string(col), "CapRes_" => ""))
-            break
-        end
-    end
-    
-    if capres_number === nothing
-        @warn "No non-zero CapRes value found for zone $zone_str in Capacity_reserve_margin.csv"
-        return Dict()
-    end
-    
-    # Now read Resource_capacity_reserve_margin.csv and get the derating factor for this CapRes
+    # Read Resource_capacity_reserve_margin.csv and get the derating factor for this resource.
+    # The file has two columns: "derating_factor_1" and "Resource".
     crm_file_path = string(genx_stage_path, "/resources/policy_assignments/Resource_capacity_reserve_margin.csv")
     
     if !isfile(crm_file_path)
@@ -268,22 +228,19 @@ function get_capacity_reserve_margin_params(resource::AbstractString, genx_stage
         return Dict()
     end
     
-    # Get the derating factor for the CapRes constraint this zone participates in
-    derating_col = string("Derating_factor_", capres_number)
-    
-    if !hasproperty(df_crm, Symbol(derating_col))
-        @warn "Column '$derating_col' not found in Resource_capacity_reserve_margin.csv"
+    if !hasproperty(df_crm, :derating_factor_1)
+        @warn "Column 'derating_factor_1' not found in Resource_capacity_reserve_margin.csv"
         return Dict()
     end
     
-    derating_factor = filtered_row[1, Symbol(derating_col)]
+    derating_factor = filtered_row[1, :derating_factor_1]
 
     # Map state code to region id. Regions are named so that they contain
     # the two-letter state codes for the states they include. We iterate
     # through the region names and pick the first region that contains the
     # state code as a substring. If no region contains the state code we
     # fall back to the state code itself and emit a warning.
-    regions = ["OR_WA_ID_MT", "CA", "AZ_NV", "WY_CO_MT"]
+    regions = ["OR_WA", "ID_UT_NV_MT", "CA", "AZ_NM", "WY_CO"]
     region_id = nothing
     for r in regions
         if occursin(state_code, r)
