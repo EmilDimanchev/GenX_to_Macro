@@ -241,13 +241,7 @@ function get_capacity_reserve_margin_params(resource::AbstractString, genx_stage
     # state code as a substring. If no region contains the state code we
     # fall back to the state code itself and emit a warning.
     regions = ["OR_WA", "ID_UT_NV_MT", "CA", "AZ_NM", "WY_CO"]
-    region_id = nothing
-    for r in regions
-        if occursin(state_code, r)
-            region_id = r
-            break
-        end
-    end
+    region_id = get_region_id(regions, state_code)
 
     if region_id === nothing
         @warn "State code '$state_code' not found in predefined regions; using state code as capacity_reserve_margin_id"
@@ -283,6 +277,18 @@ function get_state_code_from_zone(zone_number::Int)
     )
     
     return get(ZONE_TO_STATE, zone_number, "")
+end
+
+function get_region_id(regions::Vector{String}, state_code::String)
+    
+    region_id = nothing
+    for r in regions
+        if occursin(state_code, r)
+            region_id = r
+            break
+        end
+    end
+    return region_id
 end
 
 function get_capacity_reserve_margin_value(zone_number::Int, genx_stage_path::AbstractString)
@@ -338,4 +344,53 @@ function get_capacity_reserve_margin_value(zone_number::Int, genx_stage_path::Ab
     
     # If all values are zero, return 0.0
     return 0.0
+end
+
+function get_interconnection_cost_nonvre(resource::AbstractString, spur_miles::Int64)
+    
+    # Costs from power genome
+    capex_mw_mile = Dict(
+        "WA" => 1797.75,
+        "OR" => 1798.0,
+        "CA" => 1979.25,
+        "NV" => 1806.5,
+        "ID" => 1774.333333,
+        "MT" => 1687.75,
+        "WY" => 1703.5,
+        "UT" => 1768.5,
+        "AZ" => 1753.0,
+        "NM" => 1722.0,
+        "CO" => 1705.0
+    )
+
+    state_code = uppercase(resource[1:2])
+
+    capex_cost = capex_mw_mile[state_code] * spur_miles
+
+    wacc = 0.044
+    CRP = 60
+    annualized = capex_cost * (wacc / (1 - (1 + wacc)^(-CRP))) # Assuming 20 year CRP and 4.5% WACC
+
+    return annualized
+end
+
+function get_interconnect_annuity(resource::AbstractString, genx_case_path::AbstractString)
+
+    vre_file_path = joinpath(genx_case_path, "resources", "Vre.csv")
+
+    if !isfile(vre_file_path)
+        @warn "Vre.csv not found at: $vre_file_path"
+        return missing
+    end
+
+    df_vre = CSV.read(vre_file_path, DataFrame)
+
+    filtered_row = filter(row -> row.Resource == resource, df_vre)
+
+    if nrow(filtered_row) == 0
+        @warn "Resource '$resource' not found in Vre.csv"
+        return missing
+    end
+
+    return filtered_row[1, :interconnect_annuity]
 end

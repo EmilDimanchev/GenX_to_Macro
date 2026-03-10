@@ -23,6 +23,9 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString)
     vre_availability = DataFrame();
     for y in VRE
 
+        
+        interconnect_annuity = get_interconnect_annuity(gen(y).resource, genx_stage_path)
+
         pmax = inputs["pP_Max"][y,:];
 
         if length(unique(pmax))==1
@@ -64,6 +67,7 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString)
                         "max_capacity" => gen(y).max_cap_mw,
                         "min_capacity" => 0,
                         "variable_om_cost" => 0,
+                        "interconnect_annuity" => interconnect_annuity
                     )
                 )
             )
@@ -90,6 +94,8 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
     
     stage_number = get_stage_number(genx_stage_path)
 
+    
+
     VRE = inputs["VRE"];
     
     vre = Dict("VRE"=> Dict(
@@ -113,6 +119,8 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
     gen(y) = inputs["RESOURCES"][y];
     vre_availability = DataFrame();
     for y in VRE
+
+        interconnect_annuity = get_interconnect_annuity(gen(y).resource, genx_stage_path)
 
         pmax = inputs["pP_Max"][y,:];
 
@@ -172,7 +180,8 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
                         "wacc" => wacc,
                         "capital_recovery_period" => crp, 
                         "lifetime" => lifetime,
-                        "min_retired_capacity" => min_ret_cap
+                        "min_retired_capacity" => min_ret_cap,
+                        "interconnect_annuity" => interconnect_annuity
                     ),
                     speed_limits,  # Merge the speed_limits dictionary here
                     crm_params     # Merge the capacity reserve margin parameters

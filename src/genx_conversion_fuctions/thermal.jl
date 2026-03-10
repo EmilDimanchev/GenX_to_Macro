@@ -158,6 +158,7 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
     )
     )
 
+    interconnect_annuity = 0.0
     gen(y) = inputs["RESOURCES"][y]
     thermal_availability = DataFrame()
     for y in THERM_NOCCS
@@ -220,8 +221,10 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
             constraints_dict["DevelopmentConstraint"] = true
         end
 
+        # Additional inputs
         if occursin("uranium", gen(y).fuel)
             constraints_dict["MaxCapacityGrowthConstraint"] = false
+            interconnect_annuity = get_interconnection_cost_nonvre(gen(y).resource, 50) #PG assumes 50mile spur connection for nuclear
         end
         
         # Get capacity reserve margin parameters
@@ -262,7 +265,8 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
                             "wacc" => wacc,
                             "capital_recovery_period" => crp,
                             "lifetime" => lifetime,
-                            "min_retired_capacity" => min_ret_cap
+                            "min_retired_capacity" => min_ret_cap,
+                            "interconnect_annuity" => interconnect_annuity
                         ), 
                         speed_limits,  # Merge the speed_limits dictionary here
                         crm_params     # Merge the capacity reserve margin parameters
@@ -394,6 +398,7 @@ function make_thermal_ccs_json(inputs::Dict, macro_case::AbstractString, genx_st
             speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
             constraints_dict["MaxCapacityGrowthConstraint"] = false
             constraints_dict["DevelopmentConstraint"] = true
+            interconnect_annuity = get_interconnection_cost_nonvre(gen(y).resource, 20) #PG assumes 20mile spur connection for ccs
         end
         
         # Get capacity reserve margin parameters
@@ -434,7 +439,8 @@ function make_thermal_ccs_json(inputs::Dict, macro_case::AbstractString, genx_st
                             "startup_fuel_consumption" => round(conv_mmbtu_to_mwh * gen(y).start_fuel_mmbtu_per_mw, digits=3),
                             "wacc" => wacc,
                             "capital_recovery_period" => crp,
-                            "lifetime" => lifetime
+                            "lifetime" => lifetime,
+                            "interconnect_annuity" => interconnect_annuity
                         ), 
                         speed_limits,  # Merge the speed_limits dictionary here
                         crm_params     # Merge the capacity reserve margin parameters
