@@ -240,7 +240,8 @@ function get_capacity_reserve_margin_params(resource::AbstractString, genx_stage
     # through the region names and pick the first region that contains the
     # state code as a substring. If no region contains the state code we
     # fall back to the state code itself and emit a warning.
-    regions = ["OR_WA_ID_UT_NV_MT_CA_AZ_NM_WY_CO"]
+    # regions = ["OR_WA_ID_UT_NV_MT_CA_AZ_NM_WY_CO"]
+    regions = ["OR_WA", "ID_UT_NV_MT", "CA", "AZ_NM", "WY_CO"]
     region_id = get_region_id(regions, state_code)
 
     if region_id === nothing
