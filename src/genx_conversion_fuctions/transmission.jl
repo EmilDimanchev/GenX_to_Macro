@@ -85,9 +85,8 @@ function make_transmission_json(inputs::Dict, macro_case::AbstractString, genx_s
         z_start = findfirst(inputs["pNet_Map"][l,:].==1);
         z_end = findfirst(inputs["pNet_Map"][l,:].==-1);
 
-        start_region = inputs["RESOURCES"][findfirst(g.zone==z_start for g in inputs["RESOURCES"])].region;
-        end_region = inputs["RESOURCES"][findfirst(g.zone==z_end for g in inputs["RESOURCES"])].region;
-        
+        start_region = string(inputs["RESOURCES"][findfirst(g.zone==z_start for g in inputs["RESOURCES"])].region);
+        end_region = string(inputs["RESOURCES"][findfirst(g.zone==z_end for g in inputs["RESOURCES"])].region);
         # Get speed limits
         speed_limits = get_speed_limits(start_region*"_to_"*end_region, genx_stage_path)
 
@@ -97,6 +96,13 @@ function make_transmission_json(inputs::Dict, macro_case::AbstractString, genx_s
             "MaxCapacityGrowthConstraint" => false,
             "DevelopmentConstraint" => true
         )
+
+        # crm_regions = ["OR_WA", "ID_UT_NV_MT", "CA", "AZ_NM", "WY_CO"]
+        
+        # Get CRM regions
+        # region_id_start = get_region_id(crm_regions, start_region)
+        # region_id_end = get_region_id(crm_regions, end_region)
+        # region = string(region_id_start, "_", region_id_end)
 
         push!(transmission["transmission"]["instance_data"],
             Dict(

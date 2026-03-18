@@ -18,7 +18,7 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
     for z in 1:inputs["Z"]
         z_name = gen[findfirst(g.zone==z for g in gen)].region;
         state_code = get_state_code_from_zone(z)
-        region_id = get_region_id(["OR_WA", "ID_UT_NV_MT", "CA", "AZ_NM", "WY_CO"], state_code)
+        region_id = get_region_id(["OR_WA_ID_UT_NV_MT_CA_AZ_NM_WY_CO"], state_code)
         node_instance = Dict(
             "id" => "elec_"*z_name,
             "capacity_reserve_margin_id" => region_id,
@@ -147,7 +147,7 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
     for z in 1:inputs["Z"]
         z_name = gen[findfirst(g.zone==z for g in gen)].region;
         state_code = get_state_code_from_zone(z)
-        region_id = get_region_id(["OR_WA", "ID_UT_NV_MT", "CA", "AZ_NM", "WY_CO"], state_code)
+        region_id = get_region_id(["OR_WA_ID_UT_NV_MT_CA_AZ_NM_WY_CO"], state_code)
         node_instance = Dict(
             "id" => "elec_"*z_name,
             "capacity_reserve_margin_id" => region_id,

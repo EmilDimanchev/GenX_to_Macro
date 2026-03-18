@@ -283,6 +283,9 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
             discharge_constraints_dict["MaxCapacityGrowthConstraint"] = true
             discharge_constraints_dict["DevelopmentConstraint"] = true
         end
+
+        crm_params = Dict()
+        crm_params = get_capacity_reserve_margin_params(gen(y).resource, genx_stage_path)
         
         push!(storage["elec_stor"]["instance_data"],
             Dict(
@@ -330,7 +333,7 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                         "capital_recovery_period" => crp, 
                         "lifetime" => lifetime,
                         "min_retired_capacity" => min_ret_cap
-                    ), speed_limits  # Merge the speed_limits dictionary here
+                    ), speed_limits, crm_params  # Merge the speed_limits and crm_params dictionaries here
                     ),
                     "charge_edge" => Dict(
                         "start_vertex" => "elec_" * gen(y).region,

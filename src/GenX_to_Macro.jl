@@ -24,6 +24,7 @@ export get_speed_limits
 export get_capacity_reserve_margin_params
 export get_state_code_from_zone
 export get_capacity_reserve_margin_value
+export get_region_id
 
 const conv_mmbtu_to_mwh = 0.29307107
 const conv_h2ton_to_mwh = 33.3
