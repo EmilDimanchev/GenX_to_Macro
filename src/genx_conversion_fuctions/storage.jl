@@ -282,6 +282,11 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
             storage_constraints_dict["DevelopmentConstraint"] = true
             discharge_constraints_dict["MaxCapacityGrowthConstraint"] = true
             discharge_constraints_dict["DevelopmentConstraint"] = true
+            # Exclude pumped hydro
+            if occursin("pumped", gen(y).resource)
+                storage_constraints_dict["MaxCapacityGrowthConstraint"] = false
+                discharge_constraints_dict["MaxCapacityGrowthConstraint"] = false
+            end
         end
 
         crm_params = Dict()

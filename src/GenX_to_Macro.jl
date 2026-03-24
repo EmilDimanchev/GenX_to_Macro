@@ -25,9 +25,12 @@ export get_capacity_reserve_margin_params
 export get_state_code_from_zone
 export get_capacity_reserve_margin_value
 export get_region_id
+export crm_regions
 
 const conv_mmbtu_to_mwh = 0.29307107
 const conv_h2ton_to_mwh = 33.3
+
+crm_regions = []
 
 include("utilities.jl")
 include("genx_conversion_fuctions/commodities.jl")

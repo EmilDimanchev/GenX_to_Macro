@@ -96,8 +96,6 @@ function make_transmission_json(inputs::Dict, macro_case::AbstractString, genx_s
             "MaxCapacityGrowthConstraint" => false,
             "DevelopmentConstraint" => true
         )
-
-        # crm_regions = ["OR_WA", "ID_UT_NV_MT", "CA", "AZ_NM", "WY_CO"]
         
         # Get CRM regions
         # region_id_start = get_region_id(crm_regions, start_region)

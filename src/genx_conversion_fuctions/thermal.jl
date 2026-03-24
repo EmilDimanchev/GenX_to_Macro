@@ -230,6 +230,12 @@ function make_thermal_json(inputs::Dict, macro_case::AbstractString, genx_stage_
         # Get capacity reserve margin parameters
         crm_params = get_capacity_reserve_margin_params(gen(y).resource, genx_stage_path)
 
+        # Adjust gas capacity to fill in retired capacity relative to EIA April generators file
+        gas_tech_add_capacity = Dict{String, Float64}("CA_natural_gas_fired_combined_cycle_1" => 1070, "CA_natural_gas_fired_combustion_turbine_1" => 1214.7, "CA_natural_gas_steam_turbine_1" => 2866.9)
+        if in(gen(y).resource, keys(gas_tech_add_capacity)) 
+            gen(y).existing_cap_mw = gen(y).existing_cap_mw + gas_tech_add_capacity[gen(y).resource]
+        end
+
         push!(thermal["ThermalPower"]["instance_data"],
             Dict(
                 "id" => gen(y).resource,
