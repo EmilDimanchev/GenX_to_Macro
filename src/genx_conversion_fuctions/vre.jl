@@ -21,6 +21,8 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString)
 
     gen(y) = inputs["RESOURCES"][y];
     vre_availability = DataFrame();
+    
+
     for y in VRE
 
         
@@ -38,7 +40,7 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString)
             vre_availability[!,Symbol(gen(y).resource)] = pmax;
         end
 
-        
+
         constraints_dict = Dict("CapacityConstraint" => true)
 
         # if gen(y).min_cap_mw >0
@@ -94,7 +96,8 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
     
     stage_number = get_stage_number(genx_stage_path)
 
-    
+    itc_schedule = zeros(20)
+
 
     VRE = inputs["VRE"];
     
@@ -120,6 +123,12 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
     vre_availability = DataFrame();
     for y in VRE
 
+
+        # EGS
+        if occursin("Deep", gen(y).resource) || occursin("NearField", gen(y).resource)
+            itc_schedule = [0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.3, 0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        end
+        
         interconnect_annuity = get_interconnect_annuity(gen(y).resource, genx_stage_path)
 
         pmax = inputs["pP_Max"][y,:];
@@ -151,7 +160,7 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
         crm_params = Dict()
         if in(y,inputs["NEW_CAP"])
             speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
-            constraints_dict["MaxCapacityGrowthConstraint"] = true
+            # constraints_dict["MaxCapacityGrowthConstraint"] = true
             constraints_dict["DevelopmentConstraint"] = true
         end
         
@@ -181,7 +190,8 @@ function make_vre_json(inputs::Dict, macro_case::AbstractString, genx_stage_path
                         "capital_recovery_period" => crp, 
                         "lifetime" => lifetime,
                         "min_retired_capacity" => min_ret_cap,
-                        "interconnect_annuity" => interconnect_annuity
+                        "interconnect_annuity" => interconnect_annuity,
+                        "itc_schedule" => itc_schedule  
                     ),
                     speed_limits,  # Merge the speed_limits dictionary here
                     crm_params     # Merge the capacity reserve margin parameters

@@ -278,20 +278,32 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
         speed_limits = Dict()
         if in(y,inputs["NEW_CAP"])
             speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
-            storage_constraints_dict["MaxCapacityGrowthConstraint"] = true
+            # storage_constraints_dict["MaxCapacityGrowthConstraint"] = true
             storage_constraints_dict["DevelopmentConstraint"] = true
-            discharge_constraints_dict["MaxCapacityGrowthConstraint"] = true
+            # discharge_constraints_dict["MaxCapacityGrowthConstraint"] = true
             discharge_constraints_dict["DevelopmentConstraint"] = true
             # Exclude pumped hydro
-            if occursin("pumped", gen(y).resource)
-                storage_constraints_dict["MaxCapacityGrowthConstraint"] = false
-                discharge_constraints_dict["MaxCapacityGrowthConstraint"] = false
-            end
+            # if occursin("pumped", gen(y).resource)
+            #     storage_constraints_dict["MaxCapacityGrowthConstraint"] = false
+            #     discharge_constraints_dict["MaxCapacityGrowthConstraint"] = false
+            # end
         end
 
         crm_params = Dict()
         crm_params = get_capacity_reserve_margin_params(gen(y).resource, genx_stage_path)
-        
+
+        # Correct batteries ELCC
+        elcc_new_batt = round.(collect(range(0.9, stop=0.5, length=20)), digits = 2)
+        elcc_pumped_hydro = round.(collect(range(0.95, stop=0.5, length=20)), digits = 2)
+
+        itc_schedule = zeros(20)
+        if  occursin("battery", gen(y).resource) # existing battery resource names say "batteries" so this filters them out
+            crm_params["capacity_reserve_margin_derate_factor"] = elcc_new_batt[parse(Int, stage_number)]
+            itc_schedule = [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.225, 0.15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        elseif occursin("pumped_storage_hydropower", gen(y).resource)
+            crm_params["capacity_reserve_margin_derate_factor"] = elcc_pumped_hydro[parse(Int, stage_number)]
+        end
+
         push!(storage["elec_stor"]["instance_data"],
             Dict(
                 "id" =>  gen(y).resource,
@@ -315,7 +327,8 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                     "min_storage_level" => 0.0,
                     "wacc" => wacc,
                     "capital_recovery_period" => crp, 
-                    "lifetime" => lifetime
+                    "lifetime" => lifetime,
+                    "itc_schedule" => itc_schedule
                 ), speed_limits  # Merge the speed_limits dictionary here
                 ),
                 "edges"=> Dict(
@@ -337,7 +350,8 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                         "wacc" => wacc,
                         "capital_recovery_period" => crp, 
                         "lifetime" => lifetime,
-                        "min_retired_capacity" => min_ret_cap
+                        "min_retired_capacity" => min_ret_cap,
+                        "itc_schedule" => itc_schedule
                     ), speed_limits, crm_params  # Merge the speed_limits and crm_params dictionaries here
                     ),
                     "charge_edge" => Dict(

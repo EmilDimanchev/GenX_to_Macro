@@ -146,7 +146,7 @@ function make_mustrun_json(inputs::Dict, macro_case::AbstractString, genx_stage_
         crm_params = Dict()
         if in(y,inputs["NEW_CAP"])
             speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
-            constraints_dict["MaxCapacityGrowthConstraint"] = false
+            # constraints_dict["MaxCapacityGrowthConstraint"] = false
             constraints_dict["DevelopmentConstraint"] = true
         end
         

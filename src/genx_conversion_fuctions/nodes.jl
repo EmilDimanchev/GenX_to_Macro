@@ -232,13 +232,23 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
     #     )
     # )
 
+    # Implement a cap the last two periods
+    if stage_number == "19" || stage_number == "20"
+        co2_cap_constraint = true
+        cap_exog = 1
+    else
+        co2_cap_constraint = false
+        cap_exog = 0 # Need to put something here to fill in json but won't be used since constraint is false
+    end
+
     push!(nodes["nodes"], Dict(
         "type" => "CO2",
         "global_data"=> Dict("time_interval" => "CO2"),
         "instance_data" => [
             Dict("id" => "co2_sink_nothing",
-                "constraints" => Dict("CO2CapConstraint" => false),
-                "rhs_policy" => Dict("CO2CapConstraint" => 0.0)
+                "constraints" => Dict("CO2CapConstraint" => co2_cap_constraint, 
+                "BalanceConstraint" => false),
+                "rhs_policy" => Dict("CO2CapConstraint" => cap_exog)
             )
         ]
         )
@@ -248,7 +258,8 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
         "type" => "CO2Captured",
         "global_data"=> Dict("time_interval" => "CO2Captured"),
         "instance_data" => [
-            Dict("id" => "co2_sink_injection"
+            Dict("id" => "co2_sink_injection",
+            "constraints" => Dict("BalanceConstraint" => false)
             )
         ]
         )
@@ -260,6 +271,7 @@ function make_nodes_json_demands_and_fuels(inputs::Dict, macro_case::AbstractStr
         "instance_data" => [
             Dict(
                 "id" => "water_node",
+                "constraints" => Dict("BalanceConstraint" => false)
             )
         ]
         )

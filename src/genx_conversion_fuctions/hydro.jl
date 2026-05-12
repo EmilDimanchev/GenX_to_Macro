@@ -242,9 +242,9 @@ function make_hydro_json(inputs::Dict, setup::Dict, macro_case::AbstractString, 
         crm_params = Dict()
         if in(y, inputs["NEW_CAP"])
             speed_limits = get_speed_limits(gen(y).resource, genx_stage_path)
-            storage_constraints_dict["MaxCapacityGrowthConstraint"] = false
+            # storage_constraints_dict["MaxCapacityGrowthConstraint"] = false
             storage_constraints_dict["DevelopmentConstraint"] = true
-            discharge_constraints_dict["MaxCapacityGrowthConstraint"] = false
+            # discharge_constraints_dict["MaxCapacityGrowthConstraint"] = false
             discharge_constraints_dict["DevelopmentConstraint"] = true
         end
         
