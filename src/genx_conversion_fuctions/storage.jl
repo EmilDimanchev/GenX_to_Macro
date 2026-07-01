@@ -316,7 +316,7 @@ function make_storage_json(inputs::Dict, setup::Dict, macro_case::AbstractString
                     "constraints" => storage_constraints_dict,
                     "existing_capacity" => gen(y).existing_cap_mwh,
                     "fixed_om_cost" => gen(y).fixed_om_cost_per_mwhyr,
-                    "investment_cost" => gen(y).inv_cost_per_mwhyr,
+                    "annualized_investment_cost" => gen(y).inv_cost_per_mwhyr,
                     "long_duration" => gen(y).lds==1,
                     "loss_fraction" => gen(y).self_disch,
                     "max_capacity" => gen(y).max_cap_mwh,
